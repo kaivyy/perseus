@@ -417,6 +417,16 @@ Should contain `SessionStart` configuration.
 
 ---
 
+## Documentation
+
+| Platform | Guide |
+|----------|-------|
+| Claude Code | [docs/README.claude.md](docs/README.claude.md) |
+| Codex | [docs/README.codex.md](docs/README.codex.md) |
+| OpenCode | [docs/README.opencode.md](docs/README.opencode.md) |
+
+---
+
 ## License
 
 MIT
