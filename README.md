@@ -4,12 +4,43 @@ Perseus is a comprehensive suite of interactive security assessment skills for C
 
 > **Defensive Security Testing:** Perseus analyzes your own code to find vulnerabilities before attackers do. This is equivalent to running a security linter or static analyzer.
 
+## Features
+
+### Multi-Language Support (8 Languages)
+| Language | Frameworks |
+|----------|------------|
+| JavaScript/TypeScript | Express, Fastify, Next.js, Nest.js, Hono, Bun |
+| Go | Gin, Echo, Fiber, Chi |
+| PHP | Laravel, Symfony, Slim, Lumen |
+| Python | FastAPI, Django, Flask, Starlette |
+| Rust | Actix-web, Axum, Rocket, Warp |
+| Java | Spring Boot, Quarkus, Micronaut |
+| Ruby | Rails, Sinatra, Grape |
+| C# | ASP.NET Core, Minimal APIs |
+
+### Smart Auto-Detection
+Perseus automatically detects your project's:
+- **Language & Framework** (Next.js, Django, Spring, etc.)
+- **Database** (PostgreSQL, MongoDB, Redis, etc.)
+- **Infrastructure** (Docker, Kubernetes, AWS/GCP/Azure)
+- **CI/CD** (GitHub Actions, GitLab CI, Jenkins)
+- **AI/LLM** (OpenAI, Anthropic, LangChain)
+
+### Extended Coverage
+- **API Security**: REST, GraphQL, WebSocket, gRPC, OAuth, Cache poisoning
+- **Injection**: SQL, NoSQL, Command, SSTI, LDAP, XPath, Log4j
+- **Infrastructure**: Docker, CI/CD, Cloud (AWS/GCP/Azure), Kubernetes
+- **AI Security**: Prompt injection, RAG security, tool use validation
+- **Client-Side**: React, Next.js SSR, Vue, Angular, Server Actions
+
+---
+
 ## Installation
 
 ### Quick Install (Recommended)
 ```bash
 # Clone the repository
-git clone https://github.com/kaivy/perseus.git ~/.claude/plugins/perseus
+git clone https://github.com/kaivyy/perseus.git ~/.claude/plugins/perseus
 
 # Run post-install script (creates symlinks + patches security hooks)
 ~/.claude/plugins/perseus/scripts/post-install.sh
@@ -24,17 +55,12 @@ That's it! The post-install script automatically:
 ~/.claude/plugins/perseus/scripts/uninstall.sh
 ```
 
-### From GitHub (Plugin Manager)
-```bash
-/plugin install kaivy/perseus
-```
-
 ---
 
 ## Quick Start
 
 ```bash
-# Full automated assessment
+# Full automated assessment (with smart auto-detect)
 /start
 
 # Or run phases individually
@@ -61,8 +87,8 @@ Maps architecture, entry points, dependencies, and attack surface.
 | `/scan` | 13 parallel agents | `deliverables/code_analysis_deliverable.md` |
 
 **Coverage:**
-- Architecture & Tech Stack
-- Entry Points (API, GraphQL, WebSocket)
+- Architecture & Tech Stack (auto-detect 8 languages)
+- Entry Points (API, GraphQL, WebSocket, gRPC)
 - Dependencies & CVEs
 - Hardcoded Secrets
 - Security Patterns (Auth, Authz)
@@ -104,28 +130,30 @@ Synthesize all findings into professional security report.
 
 **Report Includes:**
 - Executive Summary & Risk Overview
+- Technologies Analyzed (language, framework, infrastructure)
 - Verified Exploits with PoC
-- Unverified Potential Risks
-- CVSS Severity Scoring
-- Remediation Guidance
+- Infrastructure Security (Docker, CI/CD, Cloud, K8s)
+- AI/LLM Security Findings
+- Supply Chain Summary
+- Language-specific Remediation Guidance
 - Strategic Recommendations
 
 ---
 
 ## Specialist Deep-Dive Skills
 
-For comprehensive coverage, Perseus provides 8 specialist skills that can run individually or all at once.
+Perseus provides 8 enhanced specialist skills with multi-language support:
 
 | Command | Skill | Coverage |
 |---------|-------|----------|
-| `/perseus:api` | API Security | OWASP API Top 10, GraphQL, WebSocket, Rate Limiting |
-| `/perseus:injection` | Advanced Injection | NoSQL, LDAP, XPath, SSTI, Command, Expression Language |
-| `/perseus:crypto` | Cryptography | JWT, Hashing, Encryption, Key Management, Secrets |
-| `/perseus:supply-chain` | Supply Chain | CVEs, Dependencies, Licenses, Typosquatting |
-| `/perseus:file` | File Security | Path Traversal, Upload Bypass, XXE, Zip Slip |
-| `/perseus:logic` | Business Logic | Race Conditions, TOCTOU, Price Manipulation, Workflow Bypass |
-| `/perseus:client` | Client-Side | DOM XSS, Prototype Pollution, PostMessage, DOM Clobbering |
-| `/perseus:config` | Configuration | Security Headers, CORS, Cookies, TLS, Debug Mode |
+| `/perseus:api` | API Security | OWASP API Top 10, GraphQL, WebSocket, OAuth, Cache, gRPC |
+| `/perseus:injection` | Advanced Injection | NoSQL, LDAP, XPath, SSTI, Command, Log4j, Expression Language |
+| `/perseus:crypto` | Cryptography | JWT (8 languages), Hashing, Encryption, Key Management |
+| `/perseus:supply-chain` | Supply Chain | CVEs (8 package managers), Typosquatting, Dependency Confusion |
+| `/perseus:file` | File Security | Path Traversal, Upload Bypass, XXE, Zip Slip (8 languages) |
+| `/perseus:logic` | Business Logic | Race Conditions, **AI/LLM Security**, Price Manipulation |
+| `/perseus:client` | Client-Side | React, Next.js SSR, Server Actions, Vue, Angular, Svelte |
+| `/perseus:config` | Configuration | **Docker, CI/CD, Cloud (AWS/GCP/Azure), Kubernetes** |
 | `/specialist` | **All Above** | Runs all 8 specialists in parallel |
 
 ---
@@ -135,7 +163,7 @@ For comprehensive coverage, Perseus provides 8 specialist skills that can run in
 ### Short Commands (Aliases)
 | Command | Description |
 |---------|-------------|
-| `/start` | Full automated assessment (all phases) |
+| `/start` | Full automated assessment with smart auto-detect |
 | `/scan` | Phase 1: Reconnaissance |
 | `/audit` | Phase 2: Vulnerability Analysis |
 | `/exploit` | Phase 3: PoC Verification |
@@ -156,9 +184,9 @@ For comprehensive coverage, Perseus provides 8 specialist skills that can run in
 | `/perseus:crypto` | Cryptography |
 | `/perseus:supply-chain` | Supply Chain |
 | `/perseus:file` | File Security |
-| `/perseus:logic` | Business Logic |
+| `/perseus:logic` | Business Logic + AI Security |
 | `/perseus:client` | Client-Side |
-| `/perseus:config` | Configuration |
+| `/perseus:config` | Configuration + Infrastructure |
 
 ---
 
@@ -168,7 +196,7 @@ After a full assessment, the `deliverables/` directory contains:
 
 ```
 deliverables/
-├── code_analysis_deliverable.md    # Scan results
+├── code_analysis_deliverable.md    # Scan results (multi-language)
 ├── sql_injection_analysis.md       # Audit reports
 ├── command_injection_analysis.md
 ├── xss_analysis.md
@@ -188,9 +216,8 @@ deliverables/
 ├── crypto_security_analysis.md
 ├── supply_chain_analysis.md
 ├── file_security_analysis.md
-├── business_logic_analysis.md
 ├── client_side_analysis.md
-├── config_security_analysis.md
+├── config_security_analysis.md     # Includes Docker/CI/K8s
 ├── exploitation_report.md          # Verified exploits
 └── SECURITY_REPORT.md              # Final executive report
 ```
@@ -240,13 +267,16 @@ perseus/
 │           ├── client/SKILL.md
 │           ├── config/SKILL.md
 │           └── all/SKILL.md
+├── scripts/
+│   ├── post-install.sh          # Auto symlink + hook patch
+│   └── uninstall.sh
+├── hooks/
+│   ├── hooks.json
+│   └── session-start.sh
 ├── tests/
 │   ├── README.md
 │   ├── run-tests.sh
 │   └── validate-structure.cjs
-├── .claude-plugin/
-├── .codex/
-├── .opencode/
 ├── LICENSE
 └── README.md
 ```
@@ -336,16 +366,12 @@ export ENABLE_SECURITY_REMINDER=0
 
 **Problem:** `/scan` or `/audit` says skill not found.
 
-**Solution:** Ensure symlinks are created:
+**Solution:** Run the post-install script:
 ```bash
-# Check if skills are linked
-ls -la ~/.claude/skills/ | grep perseus
-
-# If missing, create them
-ln -s ~/.claude/plugins/perseus/skills/perseus/scan ~/.claude/skills/perseus-scan
-ln -s ~/.claude/plugins/perseus/skills/perseus/audit ~/.claude/skills/perseus-audit
-# ... (see Installation section for full list)
+~/.claude/plugins/perseus/scripts/post-install.sh
 ```
+
+This creates all necessary symlinks automatically.
 
 ### Session Start Hook Not Running
 
@@ -357,6 +383,21 @@ cat ~/.claude/plugins/perseus/hooks/hooks.json
 ```
 
 Should contain `SessionStart` configuration.
+
+---
+
+## Changelog
+
+### v2.0.0 (2026-02)
+- **Multi-Language Support**: Added support for 8 languages (JS, Go, PHP, Python, Rust, Java, Ruby, C#)
+- **Smart Auto-Detect**: `/start` now auto-detects language, framework, and infrastructure
+- **Infrastructure Security**: Added Docker, CI/CD, Cloud (AWS/GCP/Azure), Kubernetes analysis
+- **AI/LLM Security**: Added prompt injection, RAG security, tool use validation
+- **Enhanced Specialists**: All 8 specialists now support multiple languages
+- **Improved Report**: Added infrastructure, AI, and supply chain sections
+
+### v1.0.0 (2026-01)
+- Initial release with core phases and specialists
 
 ---
 
