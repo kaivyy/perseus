@@ -1,0 +1,22 @@
+# System files
+.DS_Store
+Thumbs.db
+
+# Logs and databases
+*.log
+*.sqlite
+
+# Dependencies (if you add scripts later)
+node_modules/
+dist/
+out/
+build/
+
+# Local configuration & Environment variables
+.env
+.env.local
+.vscode/
+.idea/
+
+# Claude local storage
+.claude/

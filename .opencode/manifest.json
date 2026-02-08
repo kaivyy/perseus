@@ -1,0 +1,6 @@
+{
+  "name": "perseus",
+  "description": "Automated security assessment skills",
+  "version": "1.0.0",
+  "entry_point": "skills/"
+}

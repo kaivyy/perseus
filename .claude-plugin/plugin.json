@@ -1,0 +1,13 @@
+{
+  "name": "perseus",
+  "description": "Security assessment skills library for Claude Code",
+  "version": "1.0.0",
+  "author": {
+    "name": "Kaivy",
+    "email": "kaivy@example.com"
+  },
+  "homepage": "https://github.com/kaivy/perseus",
+  "repository": "https://github.com/kaivy/perseus",
+  "license": "MIT",
+  "keywords": ["security", "pentest", "audit", "shannon", "skills"]
+}
