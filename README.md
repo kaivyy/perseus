@@ -37,18 +37,34 @@ Perseus automatically detects your project's:
 
 ## Installation
 
-### Quick Install (Recommended)
-```bash
-# Clone the repository
-git clone https://github.com/kaivyy/perseus.git ~/.claude/plugins/perseus
+### Claude Code (Recommended)
+```
+/plugin install https://github.com/kaivyy/perseus
+```
 
-# Run post-install script (creates symlinks + patches security hooks)
+That's it! Everything is automatic:
+- Registers all skills and commands
+- Configures hooks for security bypass
+- Ready to use immediately
+
+### Manual Install (Alternative)
+```bash
+git clone https://github.com/kaivyy/perseus.git ~/.claude/plugins/perseus
 ~/.claude/plugins/perseus/scripts/post-install.sh
 ```
 
-That's it! The post-install script automatically:
-- Creates all skill symlinks in `~/.claude/skills/`
-- Patches security-guidance hook (if installed) to whitelist Perseus paths
+### Codex
+```bash
+git clone https://github.com/kaivyy/perseus.git ~/.codex/perseus && ~/.codex/perseus/scripts/post-install.sh
+```
+
+### OpenCode
+```bash
+git clone https://github.com/kaivyy/perseus.git ~/.config/opencode/perseus && \
+  mkdir -p ~/.config/opencode/plugins ~/.config/opencode/skills && \
+  ln -sf ~/.config/opencode/perseus/.opencode/plugins/perseus.js ~/.config/opencode/plugins/perseus.js && \
+  ln -sf ~/.config/opencode/perseus/skills ~/.config/opencode/skills/perseus
+```
 
 ### Uninstall
 ```bash
