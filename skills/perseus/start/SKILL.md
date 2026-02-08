@@ -17,9 +17,66 @@ description: Use when you want to run a full, automated penetration test from st
 
 ## Overview
 
-This master skill orchestrates the entire Perseus security assessment lifecycle. It chains all phases systematically to provide comprehensive security coverage.
+This master skill orchestrates the entire Perseus security assessment lifecycle with **smart auto-detection** of languages, frameworks, and technologies.
 
 **Goal:** Zero-touch automated security assessment with professional-grade output.
+
+## Smart Auto-Detection
+
+Before starting the assessment, Perseus automatically detects:
+
+### Language Detection
+| Files | Language |
+|-------|----------|
+| package.json, *.ts, *.js | JavaScript/TypeScript |
+| go.mod, *.go | Go |
+| composer.json, *.php | PHP |
+| requirements.txt, *.py | Python |
+| Cargo.toml, *.rs | Rust |
+| pom.xml, *.java | Java |
+| Gemfile, *.rb | Ruby |
+| *.csproj, *.cs | C# |
+
+### Framework Detection
+| Files/Patterns | Framework |
+|----------------|-----------|
+| next.config.*, app/ directory | Next.js |
+| nuxt.config.* | Nuxt.js |
+| angular.json | Angular |
+| vite.config.*, svelte.config.* | Vite/Svelte |
+| gin import, echo import | Go (Gin/Echo) |
+| artisan, laravel | PHP (Laravel) |
+| manage.py, django | Python (Django) |
+| fastapi import | Python (FastAPI) |
+| actix-web, axum in Cargo.toml | Rust (Actix/Axum) |
+| spring-boot | Java (Spring) |
+| rails | Ruby on Rails |
+
+### Infrastructure Detection
+| Files | Technology |
+|-------|------------|
+| Dockerfile, docker-compose.yml | Docker |
+| .github/workflows/*.yml | GitHub Actions |
+| .gitlab-ci.yml | GitLab CI |
+| *.tf | Terraform |
+| k8s/, kubernetes/, *.yaml with apiVersion | Kubernetes |
+| serverless.yml | Serverless |
+| vercel.json | Vercel |
+
+### API Detection
+| Patterns | Type |
+|----------|------|
+| /graphql, schema.graphql, *.gql | GraphQL |
+| WebSocket, ws://, wss:// | WebSocket |
+| *.proto, grpc | gRPC |
+| openapi, swagger | REST/OpenAPI |
+
+### AI/LLM Detection
+| Patterns | Technology |
+|----------|------------|
+| openai, anthropic, langchain | LLM Integration |
+| vector store, embeddings | RAG System |
+| prompt, completion | AI Features |
 
 ## Complete Capability Matrix
 
@@ -32,24 +89,67 @@ This master skill orchestrates the entire Perseus security assessment lifecycle.
 | 4 | `/report` | Generate executive security report |
 
 ### Specialist Deep-Dives (Run When Detected)
-| Skill | Trigger Condition | Coverage |
-|-------|-------------------|----------|
-| `/api` | REST/GraphQL/WebSocket found | OWASP API Top 10 |
-| `/injection` | NoSQL/LDAP/Templates found | Advanced injection vectors |
-| `/crypto` | JWT/Encryption/Hashing found | Cryptographic security |
-| `/supply-chain` | Package manifests found | CVEs, typosquatting, licenses |
-| `/file` | File uploads/operations found | Path traversal, XXE, upload bypass |
-| `/logic` | Payment/Auth flows found | Race conditions, business logic |
-| `/client` | Significant JS found | DOM XSS, prototype pollution |
-| `/config` | Always | Headers, CORS, cookies, TLS |
+| Skill | Trigger Condition | Extended Coverage |
+|-------|-------------------|-------------------|
+| `/api` | REST/GraphQL/WebSocket/gRPC | +OAuth, Cache, multi-lang |
+| `/injection` | NoSQL/Templates/Commands | +Log4j, SSTI, multi-lang |
+| `/crypto` | JWT/Encryption/Hashing | +multi-lang patterns |
+| `/supply-chain` | Package manifests | +multi-lang, typosquatting |
+| `/file` | File uploads/operations | +Zip Slip, XXE, multi-lang |
+| `/logic` | Payment/Auth/AI flows | +AI prompt injection |
+| `/client` | React/Vue/Angular/SSR | +Server Components, Actions |
+| `/config` | Always | +Docker, CI/CD, Cloud, K8s |
 
 ## Execution Flow
+
+### Phase 0: Auto-Detection
+**Action:** Detect project technologies
+
+```
+1. Scan for package manifests:
+   - package.json → Node.js
+   - go.mod → Go
+   - composer.json → PHP
+   - requirements.txt/pyproject.toml → Python
+   - Cargo.toml → Rust
+   - pom.xml/build.gradle → Java
+   - Gemfile → Ruby
+
+2. Scan for framework indicators:
+   - next.config.* → Next.js
+   - app/ with page.tsx → Next.js App Router
+   - angular.json → Angular
+   - gin/echo imports → Go frameworks
+   - artisan/laravel → Laravel
+   - manage.py → Django
+   - spring-boot → Spring
+
+3. Scan for infrastructure:
+   - Dockerfile → Container
+   - .github/workflows/ → GitHub Actions
+   - .gitlab-ci.yml → GitLab CI
+   - *.tf → Terraform
+   - k8s/*.yaml → Kubernetes
+
+4. Scan for API types:
+   - graphql, *.gql → GraphQL
+   - proto files → gRPC
+   - websocket imports → WebSocket
+
+5. Scan for AI integration:
+   - openai, anthropic imports → LLM
+   - langchain, llama → AI framework
+```
+
+**Announce:** "Detected: [Language], [Framework], [Infrastructure]"
+
+---
 
 ### Phase 1: Reconnaissance
 **Action:** Invoke `Skill: perseus:scan`
 
 **Agents Deployed:** 13 parallel agents covering:
-- Architecture & Entry Points
+- Architecture & Entry Points (multi-language aware)
 - Dependencies & Secrets
 - Injection Sinks & XSS Sinks
 - SSRF & Data Flows
@@ -62,25 +162,30 @@ This master skill orchestrates the entire Perseus security assessment lifecycle.
 ---
 
 ### Phase 1.5: Specialist Detection
-Based on Scan results, identify which specialists to invoke later:
+Based on detection results and scan findings:
 
 ```
-IF GraphQL/REST APIs found      -> Queue /api
-IF NoSQL/Templates found        -> Queue /injection
-IF JWT/Crypto usage found       -> Queue /crypto
-IF Package manifests found      -> Queue /supply-chain
-IF File uploads found           -> Queue /file
-IF Payment/Critical flows found -> Queue /logic
-IF Significant client JS found  -> Queue /client
-ALWAYS                          -> Queue /config
+DETECTED: Next.js/React     → Queue /client (with SSR focus)
+DETECTED: GraphQL           → Queue /api (with GraphQL focus)
+DETECTED: Docker            → Queue /config (with container focus)
+DETECTED: GitHub Actions    → Queue /config (with CI/CD focus)
+DETECTED: Kubernetes        → Queue /config (with K8s focus)
+DETECTED: MongoDB/Redis     → Queue /injection (with NoSQL focus)
+DETECTED: LLM/AI            → Queue /logic (with AI security focus)
+DETECTED: JWT/Auth          → Queue /crypto
+DETECTED: File uploads      → Queue /file
+DETECTED: Package manifests → Queue /supply-chain
+ALWAYS                      → Queue /config
 ```
+
+**Announce:** "Will run specialists: [list based on detection]"
 
 ---
 
 ### Phase 2: Core Vulnerability Analysis
 **Action:** Invoke `Skill: perseus:audit`
 
-**Agents Deployed:** 14 parallel agents in 3 waves:
+**Agents Deployed:** 14 parallel agents in 3 waves (language-aware):
 - Wave 1: SQLi, CMDi, XSS, Auth, Authz
 - Wave 2: SSRF, SSTI, Deserialization, Path Traversal, XXE
 - Wave 3: JWT, Crypto, Race Conditions, Business Logic
@@ -92,19 +197,17 @@ ALWAYS                          -> Queue /config
 ---
 
 ### Phase 2.5: Specialist Deep-Dives (Parallel)
-**Action:** Invoke all queued specialists simultaneously
+**Action:** Invoke all detected specialists simultaneously
 
-Example (if all detected):
+Example for Next.js + MongoDB + Docker project:
 ```
 Parallel:
-  - Skill: perseus-api
-  - Skill: perseus-injection
+  - Skill: perseus-api (GraphQL if detected)
+  - Skill: perseus-injection (NoSQL focus)
   - Skill: perseus-crypto
+  - Skill: perseus-client (React/Next.js focus)
+  - Skill: perseus-config (Docker + GitHub Actions)
   - Skill: perseus-supply-chain
-  - Skill: perseus-file-security
-  - Skill: perseus-logic
-  - Skill: perseus-client
-  - Skill: perseus-config
 ```
 
 **Wait Condition:** All specialist reports exist
@@ -117,15 +220,16 @@ Parallel:
 **Action:** Invoke `Skill: perseus:exploit`
 
 **Agents Deployed:** 14 parallel agents verifying all findings with safe payloads:
-- SQL/Command injection verification
-- XSS payload generation
+- SQL/Command/NoSQL injection verification
+- XSS payload generation (including React/Vue specific)
 - Auth/Authz bypass testing
 - SSRF/SSTI/XXE verification
 - JWT attack testing
 - Race condition testing
+- AI prompt injection testing (if AI detected)
 
 **Safety Enforcement:**
-- Only safe payloads (`whoami`, `sleep`, `alert(1)`)
+- Only safe payloads (`whoami`, `sleep`, `alert(1)`, `{{7*7}}`)
 - No destructive operations
 - No data exfiltration
 
@@ -140,9 +244,10 @@ Parallel:
 
 **Process:**
 1. Synthesize all deliverables
-2. Calculate severity scores
+2. Calculate severity scores (CVSS)
 3. Prioritize verified exploits
-4. Generate remediation guidance
+4. Generate language/framework-specific remediation
+5. Add infrastructure recommendations
 
 **Output:** `deliverables/SECURITY_REPORT.md`
 
@@ -154,39 +259,50 @@ When the user invokes `/start`, execute exactly this sequence:
 
 ```
 1. Announce: "Starting Perseus Security Assessment..."
-   "This will analyze your codebase for security vulnerabilities."
-   "All testing is performed locally on your own code."
+   "Detecting project technologies..."
 
-2. Execute Phase 1:
+2. Execute Phase 0 (Auto-Detection):
+   - Scan for languages, frameworks, infrastructure
+   - Announce: "Detected: Next.js 14 (TypeScript), MongoDB, Docker, GitHub Actions"
+
+3. Execute Phase 1:
    - Call: Skill: perseus:scan
    - Wait for completion
    - Announce: "Scan complete. Found X entry points, Y sinks."
 
-3. Detect Specialists:
-   - Analyze scan results
-   - List which specialists will run
+4. Detect Specialists:
+   - Analyze detection results + scan findings
+   - List which specialists will run with their focus areas
+   - Announce: "Will run: /api (GraphQL), /client (Next.js), /injection (MongoDB), /config (Docker+CI)"
 
-4. Execute Phase 2:
+5. Execute Phase 2:
    - Call: Skill: perseus:audit
    - Wait for completion
    - Announce: "Audit complete. Found X potential vulnerabilities."
 
-5. Execute Phase 2.5:
+6. Execute Phase 2.5:
    - Call all detected specialist skills in parallel
    - Wait for completion
    - Announce: "Specialist analysis complete."
 
-6. Execute Phase 3:
+7. Execute Phase 3:
    - Call: Skill: perseus:exploit
    - Wait for completion
    - Announce: "Exploitation complete. X verified, Y false positives."
 
-7. Execute Phase 4:
+8. Execute Phase 4:
    - Call: Skill: perseus:report
    - Wait for completion
 
-8. Final Announcement:
+9. Final Announcement:
    "Assessment Complete!"
+
+   Technologies Analyzed:
+   - Language: TypeScript/Node.js
+   - Framework: Next.js 14 (App Router)
+   - Database: MongoDB
+   - Infrastructure: Docker, GitHub Actions
+
    "Report saved to: deliverables/SECURITY_REPORT.md"
 
    Summary:
@@ -204,7 +320,7 @@ After completion, the `deliverables/` directory will contain:
 
 ```
 deliverables/
-├── code_analysis_deliverable.md    # Scan results
+├── code_analysis_deliverable.md    # Scan results (multi-language)
 ├── sql_injection_analysis.md       # Core audit
 ├── command_injection_analysis.md
 ├── xss_analysis.md
@@ -225,25 +341,38 @@ deliverables/
 ├── supply_chain_analysis.md
 ├── file_security_analysis.md
 ├── client_side_analysis.md
-├── config_security_analysis.md
+├── config_security_analysis.md     # Includes Docker/CI/K8s
 ├── exploitation_report.md          # Verified exploits
 └── SECURITY_REPORT.md              # Final executive report
 ```
+
+## Language-Specific Coverage
+
+| Language | SQL | NoSQL | XSS | SSTI | CMDi | Crypto | File |
+|----------|-----|-------|-----|------|------|--------|------|
+| JavaScript/TS | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Go | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| PHP | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Python | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Rust | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Java | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Ruby | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| C# | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 ## Quick Reference
 
 | Command | Description |
 |---------|-------------|
-| `/start` | Full automated assessment (this skill) |
+| `/start` | Full automated assessment with auto-detect (this skill) |
 | `/scan` | Phase 1 only - Reconnaissance |
 | `/audit` | Phase 2 only - Vulnerability analysis |
 | `/exploit` | Phase 3 only - Verification |
 | `/report` | Phase 4 only - Report generation |
-| `/api` | Specialist - API security |
-| `/injection` | Specialist - Advanced injection |
-| `/crypto` | Specialist - Cryptography |
-| `/supply-chain` | Specialist - Dependencies |
-| `/file` | Specialist - File security |
-| `/logic` | Specialist - Business logic |
-| `/client` | Specialist - Client-side |
-| `/config` | Specialist - Configuration |
+| `/api` | Specialist - API security (+GraphQL, OAuth, Cache) |
+| `/injection` | Specialist - Advanced injection (+Log4j, multi-lang) |
+| `/crypto` | Specialist - Cryptography (multi-lang) |
+| `/supply-chain` | Specialist - Dependencies (multi-lang) |
+| `/file` | Specialist - File security (+Zip Slip, XXE) |
+| `/logic` | Specialist - Business logic (+AI security) |
+| `/client` | Specialist - Client-side (+React, Next.js SSR) |
+| `/config` | Specialist - Configuration (+Docker, CI/CD, K8s) |

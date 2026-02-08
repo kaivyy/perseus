@@ -11,25 +11,13 @@ Perseus is a comprehensive suite of interactive security assessment skills for C
 # Clone the repository
 git clone https://github.com/kaivy/perseus.git ~/.claude/plugins/perseus
 
-# Run post-install script (patches security hooks)
+# Run post-install script (creates symlinks + patches security hooks)
 ~/.claude/plugins/perseus/scripts/post-install.sh
-
-# Create skill symlinks
-ln -s ~/.claude/plugins/perseus/skills/perseus/scan ~/.claude/skills/perseus-scan
-ln -s ~/.claude/plugins/perseus/skills/perseus/audit ~/.claude/skills/perseus-audit
-ln -s ~/.claude/plugins/perseus/skills/perseus/exploit ~/.claude/skills/perseus-exploit
-ln -s ~/.claude/plugins/perseus/skills/perseus/report ~/.claude/skills/perseus-report
-ln -s ~/.claude/plugins/perseus/skills/perseus/start ~/.claude/skills/perseus-start
-ln -s ~/.claude/plugins/perseus/skills/perseus/specialists/api ~/.claude/skills/perseus-api
-ln -s ~/.claude/plugins/perseus/skills/perseus/specialists/injection ~/.claude/skills/perseus-injection
-ln -s ~/.claude/plugins/perseus/skills/perseus/specialists/crypto ~/.claude/skills/perseus-crypto
-ln -s ~/.claude/plugins/perseus/skills/perseus/specialists/supply-chain ~/.claude/skills/perseus-supply-chain
-ln -s ~/.claude/plugins/perseus/skills/perseus/specialists/file-security ~/.claude/skills/perseus-file
-ln -s ~/.claude/plugins/perseus/skills/perseus/specialists/logic ~/.claude/skills/perseus-logic
-ln -s ~/.claude/plugins/perseus/skills/perseus/specialists/client ~/.claude/skills/perseus-client
-ln -s ~/.claude/plugins/perseus/skills/perseus/specialists/config ~/.claude/skills/perseus-config
-ln -s ~/.claude/plugins/perseus/skills/perseus/specialists/all ~/.claude/skills/perseus-specialist
 ```
+
+That's it! The post-install script automatically:
+- Creates all skill symlinks in `~/.claude/skills/`
+- Patches security-guidance hook (if installed) to whitelist Perseus paths
 
 ### Uninstall
 ```bash

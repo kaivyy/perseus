@@ -14,6 +14,10 @@ set -euo pipefail
 echo "🛡️  Perseus Security Skills - Post-Install Setup"
 echo "================================================"
 
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
+PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
 # Detect OS and set paths
 if [[ "$OSTYPE" == "darwin"* ]]; then
     CLAUDE_DIR="$HOME/.claude"
@@ -130,6 +134,51 @@ if [[ $patched -eq 0 ]]; then
     echo "ℹ️  No security-guidance plugin found - skipping patch"
     echo "   (This is normal if you don't have the plugin installed)"
 fi
+
+# === CREATE SKILL SYMLINKS ===
+echo ""
+echo "📂 Creating skill symlinks..."
+
+SKILLS_DIR="$CLAUDE_DIR/skills"
+mkdir -p "$SKILLS_DIR"
+
+# Define all skills to symlink
+declare -A SKILL_LINKS=(
+    ["perseus-scan"]="skills/perseus/scan"
+    ["perseus-audit"]="skills/perseus/audit"
+    ["perseus-exploit"]="skills/perseus/exploit"
+    ["perseus-report"]="skills/perseus/report"
+    ["perseus-start"]="skills/perseus/start"
+    ["perseus-help"]="skills/perseus/using-perseus"
+    ["perseus-api"]="skills/perseus/specialists/api"
+    ["perseus-injection"]="skills/perseus/specialists/injection"
+    ["perseus-crypto"]="skills/perseus/specialists/crypto"
+    ["perseus-supply-chain"]="skills/perseus/specialists/supply-chain"
+    ["perseus-file"]="skills/perseus/specialists/file-security"
+    ["perseus-logic"]="skills/perseus/specialists/logic"
+    ["perseus-client"]="skills/perseus/specialists/client"
+    ["perseus-config"]="skills/perseus/specialists/config"
+    ["perseus-specialist"]="skills/perseus/specialists/all"
+)
+
+for skill_name in "${!SKILL_LINKS[@]}"; do
+    skill_path="${PLUGIN_ROOT}/${SKILL_LINKS[$skill_name]}"
+    link_path="${SKILLS_DIR}/${skill_name}"
+
+    if [[ -d "$skill_path" ]]; then
+        # Remove existing symlink if present
+        if [[ -L "$link_path" ]]; then
+            rm "$link_path"
+        fi
+
+        # Create symlink
+        ln -s "$skill_path" "$link_path" 2>/dev/null && \
+            echo "   ✅ $skill_name" || \
+            echo "   ⚠️  Failed: $skill_name"
+    else
+        echo "   ⚠️  Skill not found: $skill_path"
+    fi
+done
 
 echo ""
 echo "🎉 Perseus installation complete!"
