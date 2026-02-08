@@ -1,0 +1,6 @@
+{
+  "name": "perseus",
+  "description": "Penetration testing skills suite",
+  "version": "1.0.0",
+  "skills_path": "skills/"
+}

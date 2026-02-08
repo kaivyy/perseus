@@ -1,0 +1,20 @@
+{
+  "name": "perseus-dev",
+  "description": "Development marketplace for Perseus security skills library",
+  "owner": {
+    "name": "Kaivy",
+    "email": "kaivy@example.com"
+  },
+  "plugins": [
+    {
+      "name": "perseus",
+      "description": "Security assessment skills library for Claude Code",
+      "version": "1.0.0",
+      "source": "./",
+      "author": {
+        "name": "Kaivy",
+        "email": "kaivy@example.com"
+      }
+    }
+  ]
+}
