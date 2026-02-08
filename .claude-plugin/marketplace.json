@@ -10,8 +10,6 @@
       "name": "perseus",
       "description": "Multi-language security assessment (JS, Go, PHP, Python, Rust, Java, Ruby, C#)",
       "version": "2.0.0",
-      "source": "https://github.com/kaivyy/perseus",
-      "postInstall": "scripts/post-install.sh",
       "author": {
         "name": "Kaivy",
         "github": "kaivyy"

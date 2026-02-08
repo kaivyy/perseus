@@ -9,9 +9,5 @@
   "homepage": "https://github.com/kaivyy/perseus",
   "repository": "https://github.com/kaivyy/perseus",
   "license": "MIT",
-  "keywords": ["security", "pentest", "audit", "vulnerability", "skills", "multi-language"],
-  "hooks": "hooks/hooks.json",
-  "skills": "skills/",
-  "commands": "commands/",
-  "postInstall": "scripts/post-install.sh"
+  "keywords": ["security", "pentest", "audit", "vulnerability", "skills", "multi-language"]
 }
