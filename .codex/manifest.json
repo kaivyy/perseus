@@ -1,6 +1,7 @@
 {
   "name": "perseus",
-  "description": "Penetration testing skills suite",
-  "version": "1.0.0",
-  "skills_path": "skills/"
+  "description": "Multi-language security assessment skills (8 languages, 30+ frameworks)",
+  "version": "2.0.0",
+  "skills_path": "skills/",
+  "postInstall": "scripts/post-install.sh"
 }

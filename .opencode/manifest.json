@@ -1,6 +1,7 @@
 {
   "name": "perseus",
-  "description": "Automated security assessment skills",
-  "version": "1.0.0",
-  "entry_point": "skills/"
+  "description": "Multi-language security assessment skills (8 languages, 30+ frameworks)",
+  "version": "2.0.0",
+  "entry_point": "skills/",
+  "plugin": ".opencode/plugins/perseus.js"
 }

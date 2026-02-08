@@ -1,19 +1,20 @@
 {
-  "name": "perseus-dev",
-  "description": "Development marketplace for Perseus security skills library",
+  "name": "perseus",
+  "description": "Perseus Security Skills - Automated penetration testing for your codebase",
   "owner": {
     "name": "Kaivy",
-    "email": "kaivy@example.com"
+    "github": "kaivyy"
   },
   "plugins": [
     {
       "name": "perseus",
-      "description": "Security assessment skills library for Claude Code",
-      "version": "1.0.0",
-      "source": "./",
+      "description": "Multi-language security assessment (JS, Go, PHP, Python, Rust, Java, Ruby, C#)",
+      "version": "2.0.0",
+      "source": "https://github.com/kaivyy/perseus",
+      "postInstall": "scripts/post-install.sh",
       "author": {
         "name": "Kaivy",
-        "email": "kaivy@example.com"
+        "github": "kaivyy"
       }
     }
   ]
