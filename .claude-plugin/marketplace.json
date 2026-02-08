@@ -1,6 +1,6 @@
 {
-  "name": "perseus",
-  "description": "Perseus Security Skills - Automated penetration testing for your codebase",
+  "name": "perseus-dev",
+  "description": "Development marketplace for Perseus security skills",
   "owner": {
     "name": "Kaivy",
     "github": "kaivyy"
@@ -10,6 +10,7 @@
       "name": "perseus",
       "description": "Multi-language security assessment (JS, Go, PHP, Python, Rust, Java, Ruby, C#)",
       "version": "2.0.0",
+      "source": "./",
       "author": {
         "name": "Kaivy",
         "github": "kaivyy"
