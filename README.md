@@ -1,5 +1,7 @@
 # Perseus Security Skills for Claude Code
 
+![Perseus Plugin](docs/perseus.png)
+
 Perseus is a comprehensive suite of interactive security assessment skills for Claude Code. It transforms Claude into an autonomous penetration testing partner for **your own codebase**, capable of performing everything from initial reconnaissance to deep-dive vulnerability research and executive reporting.
 
 > **Defensive Security Testing:** Perseus analyzes your own code to find vulnerabilities before attackers do. This is equivalent to running a security linter or static analyzer.
