@@ -7,7 +7,7 @@ description: Use when analyzing components for vulnerabilities (Phase 3 - Parall
 
 ## Overview
 
-This skill executes the **Vulnerability Analysis Phase** of the Perseus/Shannon framework. It performs deep-dive white-box analysis on the components identified during the Scan phase.
+This skill executes the **Vulnerability Analysis Phase** of the Perseus framework. It performs deep-dive white-box analysis on the components identified during the Scan phase.
 
 **Goal:** Prove the *potential* for exploitation by finding source-to-sink paths lacking proper defense.
 

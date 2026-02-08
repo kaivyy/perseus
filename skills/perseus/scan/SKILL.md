@@ -7,7 +7,7 @@ description: Use when starting a security assessment to map architecture, entry 
 
 ## Overview
 
-This skill executes the **Pre-Reconnaissance Methodology** of the Perseus/Shannon framework. It maps the target's digital footprint, internal architecture, and attack surface to build a "Target Knowledge Graph".
+This skill executes the **Pre-Reconnaissance Methodology** of the Perseus framework. It maps the target's digital footprint, internal architecture, and attack surface to build a "Target Knowledge Graph".
 
 **Goal:** Zero-blind-spot understanding of what exists, how it works, and where it can be attacked.
 
