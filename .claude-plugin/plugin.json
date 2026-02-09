@@ -1,7 +1,7 @@
 {
   "name": "perseus",
   "description": "Security assessment skills for Claude Code - Multi-language (JS, Go, PHP, Python, Rust, Java, Ruby, C#)",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "author": {
     "name": "Kaivy",
     "github": "kaivyy"
