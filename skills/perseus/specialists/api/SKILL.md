@@ -338,7 +338,63 @@ This specialist skill performs comprehensive API security analysis covering OWAS
     - Missing Cache-Control headers
     - CDN caching rules
 
-### Phase 6: API Configuration (3 Parallel Agents)
+### Phase 6: HTTP Request Smuggling Analysis (3 Parallel Agents)
+
+1.  **CL.TE Smuggling Analyst:**
+    *   "Check for Content-Length vs Transfer-Encoding conflicts."
+
+    **Attack Pattern:**
+    ```http
+    POST / HTTP/1.1
+    Host: vulnerable.com
+    Content-Length: 13
+    Transfer-Encoding: chunked
+
+    0
+
+    SMUGGLED
+    ```
+
+    **Framework Considerations:**
+    - Node.js: Check for `http-proxy`, `express-http-proxy`
+    - Go: Check reverse proxy configurations
+    - Python: Check `gunicorn`, `uvicorn` behind nginx
+    - Java: Check Tomcat, Jetty behind load balancer
+
+2.  **TE.CL Smuggling Analyst:**
+    *   "Check for Transfer-Encoding prioritization issues."
+
+    **Attack Pattern:**
+    ```http
+    POST / HTTP/1.1
+    Host: vulnerable.com
+    Content-Length: 3
+    Transfer-Encoding: chunked
+
+    8
+    SMUGGLED
+    0
+
+    ```
+
+3.  **HTTP/2 Downgrade Analyst:**
+    *   "Check for HTTP/2 to HTTP/1.1 downgrade vulnerabilities."
+
+    **Issues:**
+    - H2C smuggling (HTTP/2 cleartext)
+    - CRLF injection in HTTP/2 pseudo-headers
+    - Request splitting via HTTP/2 header manipulation
+
+    **Patterns to Check:**
+    ```javascript
+    // Check for reverse proxy configurations
+    // nginx, HAProxy, AWS ALB, Cloudflare
+
+    // Vulnerable: Different interpretation between frontend/backend
+    // Frontend: HTTP/2 → Backend: HTTP/1.1
+    ```
+
+### Phase 7: API Configuration (3 Parallel Agents)
 
 1.  **CORS Analyst:**
     *   "Check CORS configuration across all frameworks."

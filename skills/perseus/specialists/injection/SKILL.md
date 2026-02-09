@@ -345,6 +345,175 @@ This specialist skill performs comprehensive injection analysis beyond basic SQL
     header("Location: " . $_GET['url']);
     ```
 
+### Phase 8: ReDoS (Regex Denial of Service) Analysis (2 Parallel Agents)
+
+1.  **Regex Pattern Analyst:**
+    *   "Find regex patterns with user input that could cause catastrophic backtracking."
+
+    **Vulnerable Patterns:**
+    ```javascript
+    // Node.js - VULNERABLE (exponential backtracking)
+    const emailRegex = /^([a-zA-Z0-9]+)+@/;  // Nested quantifiers
+    const pathRegex = /^(a+)+$/;  // Classic ReDoS
+    const htmlRegex = /<([a-z]+)*>/;  // Nested groups with *
+
+    userInput.match(emailRegex);  // Can hang with crafted input
+
+    // Attack payload: "aaaaaaaaaaaaaaaaaaaaaaaaaaaa!"
+    ```
+    ```python
+    # Python - VULNERABLE
+    import re
+    pattern = re.compile(r'^(a+)+$')
+    pattern.match(user_input)  # Hangs with "aaaa...!"
+    ```
+    ```go
+    // Go - SAFER (RE2 engine doesn't backtrack)
+    // But check for regexp/syntax with PCRE features
+    regexp.MustCompile(`^(a+)+$`)  // Still check patterns
+    ```
+    ```java
+    // Java - VULNERABLE
+    Pattern.compile("^(a+)+$").matcher(input).matches();
+    ```
+    ```php
+    // PHP - VULNERABLE
+    preg_match('/^(a+)+$/', $input);  // Uses PCRE
+    ```
+
+    **Dangerous Patterns:**
+    | Pattern | Why Dangerous |
+    |---------|---------------|
+    | `(a+)+` | Nested quantifiers |
+    | `(a|a)+` | Overlapping alternation |
+    | `(a+)*` | Quantifier on quantified group |
+    | `(.*a){x}` | Greedy with repetition |
+    | `(a+){2,}` | Nested quantifiers |
+
+2.  **User Input Regex Analyst:**
+    *   "Find places where user input is used to construct regex patterns."
+
+    **Patterns:**
+    ```javascript
+    // VULNERABLE - User controls regex
+    const pattern = new RegExp(userInput);
+    text.match(pattern);  // ReDoS + potential RCE in some engines
+
+    // SAFE - Escape user input
+    const escaped = userInput.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const pattern = new RegExp(escaped);
+    ```
+    ```python
+    # VULNERABLE
+    re.search(user_input, text)
+
+    # SAFE
+    re.search(re.escape(user_input), text)
+    ```
+
+### Phase 9: Deserialization Analysis (4 Parallel Agents)
+
+1.  **Java Deserialization Analyst:**
+    *   "Find unsafe Java deserialization."
+
+    **Patterns:**
+    ```java
+    // VULNERABLE - Deserializing untrusted data
+    ObjectInputStream ois = new ObjectInputStream(inputStream);
+    Object obj = ois.readObject();  // RCE if attacker controls stream
+
+    // VULNERABLE - XMLDecoder
+    XMLDecoder decoder = new XMLDecoder(inputStream);
+    Object obj = decoder.readObject();
+
+    // VULNERABLE - XStream without allowlist
+    XStream xstream = new XStream();
+    Object obj = xstream.fromXML(userInput);
+
+    // SAFE - Use allowlist
+    xstream.allowTypes(new Class[] { SafeClass.class });
+    ```
+
+    **Gadget Chains:**
+    - Commons Collections (CC1-CC7)
+    - Spring (Spring1, Spring2)
+    - Hibernate
+    - JDK (JDK7u21)
+
+2.  **PHP Deserialization Analyst:**
+    *   "Find unsafe PHP unserialize."
+
+    **Patterns:**
+    ```php
+    // VULNERABLE - unserialize with user input
+    $data = unserialize($_POST['data']);  // RCE via __wakeup, __destruct
+
+    // VULNERABLE - Even with allowed_classes
+    $data = unserialize($input, ['allowed_classes' => ['User']]);
+    // User class might have dangerous magic methods
+
+    // SAFE - Use JSON
+    $data = json_decode($_POST['data'], true);
+    ```
+
+    **Magic Methods to Check:**
+    - `__wakeup()` - Called during unserialize
+    - `__destruct()` - Called when object destroyed
+    - `__toString()` - Called on string conversion
+    - `__call()` - Called on undefined method
+
+3.  **Python Deserialization Analyst:**
+    *   "Find unsafe Python pickle/yaml."
+
+    **Patterns:**
+    ```python
+    # VULNERABLE - pickle with untrusted data
+    import pickle
+    data = pickle.loads(user_input)  # RCE
+
+    # VULNERABLE - yaml.load without Loader
+    import yaml
+    data = yaml.load(user_input)  # RCE (PyYAML < 6.0)
+
+    # SAFE - yaml with SafeLoader
+    data = yaml.safe_load(user_input)
+
+    # VULNERABLE - marshal
+    import marshal
+    marshal.loads(user_input)  # RCE
+    ```
+
+4.  **.NET Deserialization Analyst:**
+    *   "Find unsafe .NET deserialization."
+
+    **Patterns:**
+    ```csharp
+    // VULNERABLE - BinaryFormatter
+    BinaryFormatter bf = new BinaryFormatter();
+    object obj = bf.Deserialize(stream);  // RCE
+
+    // VULNERABLE - NetDataContractSerializer
+    var serializer = new NetDataContractSerializer();
+    object obj = serializer.ReadObject(stream);
+
+    // VULNERABLE - ObjectStateFormatter
+    ObjectStateFormatter osf = new ObjectStateFormatter();
+    object obj = osf.Deserialize(input);
+
+    // VULNERABLE - LosFormatter (ViewState)
+    LosFormatter lf = new LosFormatter();
+    object obj = lf.Deserialize(input);
+
+    // SAFE - Use JSON with known types only
+    JsonConvert.DeserializeObject<SafeType>(input);
+    ```
+
+    **Gadgets:**
+    - TypeConfuseDelegate
+    - TextFormattingRunProperties
+    - PSObject
+    - WindowsIdentity
+
 ## Safe Payload Reference
 
 | Injection Type | Detection Payload | Verification |
@@ -360,6 +529,10 @@ This specialist skill performs comprehensive injection analysis beyond basic SQL
 | SpEL | `${7*7}` | Output: 49 |
 | Header | `\r\nX-Injected: true` | New header appears |
 | Log4j | `${jndi:ldap://x.x}` | DNS callback |
+| ReDoS | `aaaaaaaaaaaaaaaaaa!` | Response delay/timeout |
+| Java Deser | ysoserial payload | RCE callback |
+| PHP Deser | `O:8:"stdClass":0:{}` | Object created |
+| Python Pickle | `cos\nsystem\n(S'id'\ntR.` | Command executed |
 
 ## Output Requirements
 
