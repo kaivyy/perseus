@@ -16,6 +16,32 @@ This skill executes the **Pre-Reconnaissance Methodology** of the Perseus framew
 2.  **Surface Mapping (Parallel):** XSS Sinks, SSRF Sinks, Data Flows.
 3.  **Synthesis:** Comprehensive Code Analysis Report.
 
+## Incremental Scan Mode
+
+For large codebases, use incremental scanning to only analyze changed files:
+
+**Detection:** Check for `perseus.yaml` with incremental settings:
+```yaml
+incremental:
+  enabled: true
+  baseline: "main"  # or specific commit
+```
+
+**If incremental enabled:**
+1. Run `git diff --name-only <baseline>...HEAD` to get changed files
+2. Filter to include only code files (exclude tests, configs)
+3. Focus analysis on changed files and their dependencies
+4. Merge with previous cached results from `.perseus-cache/`
+
+**Incremental Workflow:**
+```bash
+# Get changed files
+git diff --name-only main...HEAD | grep -E '\.(js|ts|py|go|php|rb|java|rs|cs)$'
+
+# If no changes, skip scan
+# If changes exist, scan only those files + imports
+```
+
 ## Execution Instructions
 
 ### Phase 1: Discovery (Run in Parallel)

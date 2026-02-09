@@ -1,0 +1,177 @@
+# Perseus Configuration File
+# Copy this file to your project root as `perseus.yaml` to customize scans
+
+# ============================================================================
+# SCAN SCOPE
+# ============================================================================
+scope:
+  # Include patterns (glob)
+  include:
+    - "**/*.js"
+    - "**/*.ts"
+    - "**/*.jsx"
+    - "**/*.tsx"
+    - "**/*.py"
+    - "**/*.go"
+    - "**/*.php"
+    - "**/*.rb"
+    - "**/*.java"
+    - "**/*.rs"
+    - "**/*.cs"
+
+  # Exclude patterns (glob)
+  exclude:
+    - "node_modules/**"
+    - "vendor/**"
+    - ".git/**"
+    - "dist/**"
+    - "build/**"
+    - "coverage/**"
+    - "**/*.min.js"
+    - "**/*.test.*"
+    - "**/*.spec.*"
+    - "__tests__/**"
+
+# ============================================================================
+# PHASES
+# ============================================================================
+phases:
+  scan: true
+  audit: true
+  exploit: true
+  report: true
+
+# ============================================================================
+# SPECIALISTS
+# ============================================================================
+specialists:
+  api: true
+  injection: true
+  crypto: true
+  supply-chain: true
+  file: true
+  logic: true
+  client: true
+  config: true
+
+# ============================================================================
+# VULNERABILITY CHECKS
+# ============================================================================
+checks:
+  # Injection
+  sql_injection: true
+  nosql_injection: true
+  command_injection: true
+  ldap_injection: true
+  xpath_injection: true
+  ssti: true
+  log4j: true
+
+  # XSS
+  xss_reflected: true
+  xss_stored: true
+  xss_dom: true
+
+  # Authentication
+  auth_bypass: true
+  weak_password: true
+  session_fixation: true
+  jwt_vulnerabilities: true
+
+  # Authorization
+  idor: true
+  privilege_escalation: true
+  missing_access_control: true
+
+  # API
+  bola: true
+  mass_assignment: true
+  rate_limiting: true
+  graphql_introspection: true
+  graphql_dos: true
+
+  # Infrastructure
+  docker_security: true
+  kubernetes_security: true
+  cicd_security: true
+  cloud_misconfig: true
+
+  # Crypto
+  weak_crypto: true
+  hardcoded_secrets: true
+  insecure_random: true
+
+  # File
+  path_traversal: true
+  file_upload: true
+  xxe: true
+  zip_slip: true
+
+  # Client
+  prototype_pollution: true
+  postmessage_abuse: true
+  dom_clobbering: true
+
+  # AI/LLM
+  prompt_injection: true
+  rag_security: true
+  tool_use_validation: true
+
+# ============================================================================
+# SEVERITY THRESHOLDS
+# ============================================================================
+severity:
+  # Minimum severity to report (critical, high, medium, low, info)
+  minimum: low
+
+  # Fail assessment if findings exceed threshold
+  fail_on:
+    critical: 1    # Fail if >= 1 critical
+    high: 5        # Fail if >= 5 high
+    medium: -1     # -1 = no limit
+    low: -1
+
+# ============================================================================
+# REPORTING
+# ============================================================================
+reporting:
+  # Output directory
+  output_dir: "deliverables"
+
+  # Report formats
+  formats:
+    markdown: true
+    json: false
+    html: false
+
+  # Include in report
+  include:
+    executive_summary: true
+    technical_details: true
+    remediation_code: true
+    references: true
+
+# ============================================================================
+# INCREMENTAL SCAN
+# ============================================================================
+incremental:
+  enabled: false
+  # Compare against (branch, commit, or "last-scan")
+  baseline: "main"
+  # Cache directory for previous results
+  cache_dir: ".perseus-cache"
+
+# ============================================================================
+# SAFE MODE (for exploit phase)
+# ============================================================================
+safe_mode:
+  enabled: true
+  # Maximum payload execution time (seconds)
+  timeout: 10
+  # Allowed payload types
+  allowed_payloads:
+    - "sleep"
+    - "alert"
+    - "console.log"
+    - "echo"
+    - "print"

@@ -184,6 +184,68 @@ This specialist skill performs comprehensive API security analysis covering OWAS
 4.  **Field Suggestion Analyst:**
     *   "Check if field suggestions are enabled - can leak schema info even without introspection."
 
+5.  **Subscription Security Analyst:**
+    *   "Analyze GraphQL subscriptions for security issues."
+
+    **Subscription Vulnerabilities:**
+    ```graphql
+    # Subscription without auth check
+    subscription {
+      orderUpdated { id status userId }  # Can subscribe to any user's orders?
+    }
+
+    # Subscription flooding
+    subscription { messageAdded { content } }  # No rate limiting?
+    ```
+
+    **Patterns to Check:**
+    ```javascript
+    // Apollo Server - VULNERABLE
+    const resolvers = {
+      Subscription: {
+        orderUpdated: {
+          subscribe: () => pubsub.asyncIterator(['ORDER_UPDATED'])
+          // No auth check - anyone can subscribe
+        }
+      }
+    };
+
+    // Apollo Server - SAFE
+    const resolvers = {
+      Subscription: {
+        orderUpdated: {
+          subscribe: withFilter(
+            () => pubsub.asyncIterator(['ORDER_UPDATED']),
+            (payload, variables, context) => {
+              // Verify user owns the resource
+              return payload.orderUpdated.userId === context.user.id;
+            }
+          )
+        }
+      }
+    };
+    ```
+    ```python
+    # Strawberry - Check subscription auth
+    @strawberry.type
+    class Subscription:
+        @strawberry.subscription
+        async def order_updated(self, info: Info) -> AsyncGenerator[Order, None]:
+            # Is info.context.user checked?
+    ```
+
+6.  **Persisted Queries Analyst:**
+    *   "Check if persisted queries can be bypassed."
+
+    **Bypass Patterns:**
+    ```json
+    // Attempt to send raw query when only persisted should be allowed
+    { "query": "{ __schema { types { name } } }" }
+
+    // Try extensions field
+    { "extensions": { "persistedQuery": { "sha256Hash": "..." } }, "query": "{ malicious }" }
+    ```
+
 ### Phase 3: WebSocket Analysis (3 Parallel Agents)
 
 *If WebSocket detected:*
