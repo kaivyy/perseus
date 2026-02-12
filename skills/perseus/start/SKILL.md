@@ -21,6 +21,19 @@ This master skill orchestrates the entire Perseus security assessment lifecycle 
 
 **Goal:** Zero-touch automated security assessment with professional-grade output.
 
+## Engagement Mode (Required)
+
+Before running phases, select one mode:
+
+| Mode | Environment | Behavior |
+|------|-------------|----------|
+| `PRODUCTION_SAFE` | Live production | Passive-first analysis and minimal safe verification only |
+| `STAGING_ACTIVE` | Staging/pre-production | Active safe payload testing with request throttling |
+| `LAB_FULL` | Isolated lab | Full dynamic verification and payload mutation |
+| `LAB_RED_TEAM` | Dedicated lab environment | Multi-step adversarial simulation with kill-switches |
+
+Default mode is `PRODUCTION_SAFE` unless user explicitly confirms staging/lab authorization.
+
 ## Smart Auto-Detection
 
 Before starting the assessment, Perseus automatically detects:
@@ -101,6 +114,26 @@ Before starting the assessment, Perseus automatically detects:
 | `/config` | Always | +Docker, CI/CD, Cloud, K8s |
 
 ## Execution Flow
+
+### Phase -1: Engagement Setup
+**Action:** Determine mode and boundaries
+
+```
+1. Detect runtime context (production/staging/lab)
+2. Ask for explicit authorization scope if context is unclear
+3. Set mode: PRODUCTION_SAFE, STAGING_ACTIVE, LAB_FULL, or LAB_RED_TEAM
+4. Create deliverables/engagement_profile.md with:
+   - mode
+   - in-scope targets
+   - excluded systems
+   - request-rate limits
+   - approved test window
+   - kill-switch thresholds (error rate, latency, saturation)
+```
+
+**Announce:** "Engagement mode set to: [MODE]"
+
+---
 
 ### Phase 0: Auto-Detection
 **Action:** Detect project technologies
@@ -219,7 +252,7 @@ Parallel:
 ### Phase 3: Exploitation & Verification
 **Action:** Invoke `Skill: perseus:exploit`
 
-**Agents Deployed:** 14 parallel agents verifying all findings with safe payloads:
+**Agents Deployed:** 14 parallel agents verifying findings based on engagement mode:
 - SQL/Command/NoSQL injection verification
 - XSS payload generation (including React/Vue specific)
 - Auth/Authz bypass testing
@@ -228,7 +261,13 @@ Parallel:
 - Race condition testing
 - AI prompt injection testing (if AI detected)
 
-**Safety Enforcement:**
+**Mode Enforcement:**
+- `PRODUCTION_SAFE`: passive + minimal verification, no internal scanning, strict request caps
+- `STAGING_ACTIVE`: active safe PoCs with throttling
+- `LAB_FULL`: full dynamic verification in isolated environment
+- `LAB_RED_TEAM`: attack-chain simulation in isolated lab with automatic abort thresholds
+
+**Safety Enforcement (all modes):**
 - Only safe payloads (`whoami`, `sleep`, `alert(1)`, `{{7*7}}`)
 - No destructive operations
 - No data exfiltration
@@ -259,42 +298,47 @@ When the user invokes `/start`, execute exactly this sequence:
 
 ```
 1. Announce: "Starting Perseus Security Assessment..."
-   "Detecting project technologies..."
 
-2. Execute Phase 0 (Auto-Detection):
+2. Execute Phase -1 (Engagement Setup):
+   - Determine environment and authorization
+   - Set mode (default PRODUCTION_SAFE)
+   - Write deliverables/engagement_profile.md
+   - Announce: "Engagement mode: PRODUCTION_SAFE"
+
+3. Execute Phase 0 (Auto-Detection):
    - Scan for languages, frameworks, infrastructure
    - Announce: "Detected: Next.js 14 (TypeScript), MongoDB, Docker, GitHub Actions"
 
-3. Execute Phase 1:
+4. Execute Phase 1:
    - Call: Skill: perseus:scan
    - Wait for completion
    - Announce: "Scan complete. Found X entry points, Y sinks."
 
-4. Detect Specialists:
+5. Detect Specialists:
    - Analyze detection results + scan findings
    - List which specialists will run with their focus areas
    - Announce: "Will run: /api (GraphQL), /client (Next.js), /injection (MongoDB), /config (Docker+CI)"
 
-5. Execute Phase 2:
+6. Execute Phase 2:
    - Call: Skill: perseus:audit
    - Wait for completion
    - Announce: "Audit complete. Found X potential vulnerabilities."
 
-6. Execute Phase 2.5:
+7. Execute Phase 2.5:
    - Call all detected specialist skills in parallel
    - Wait for completion
    - Announce: "Specialist analysis complete."
 
-7. Execute Phase 3:
+8. Execute Phase 3:
    - Call: Skill: perseus:exploit
    - Wait for completion
    - Announce: "Exploitation complete. X verified, Y false positives."
 
-8. Execute Phase 4:
+9. Execute Phase 4:
    - Call: Skill: perseus:report
    - Wait for completion
 
-9. Final Announcement:
+10. Final Announcement:
    "Assessment Complete!"
 
    Technologies Analyzed:
@@ -320,6 +364,7 @@ After completion, the `deliverables/` directory will contain:
 
 ```
 deliverables/
+├── engagement_profile.md          # Mode, scope, and verification constraints
 ├── code_analysis_deliverable.md    # Scan results (multi-language)
 ├── sql_injection_analysis.md       # Core audit
 ├── command_injection_analysis.md
@@ -342,6 +387,7 @@ deliverables/
 ├── file_security_analysis.md
 ├── client_side_analysis.md
 ├── config_security_analysis.md     # Includes Docker/CI/K8s
+├── verification_scope.md           # Exploit verification boundaries
 ├── exploitation_report.md          # Verified exploits
 └── SECURITY_REPORT.md              # Final executive report
 ```

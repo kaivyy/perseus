@@ -36,6 +36,22 @@ This specialist skill performs comprehensive injection analysis beyond basic SQL
 
 **Goal:** Find all injection vectors including less common but equally dangerous ones.
 
+## Engagement Mode Compatibility
+
+| Mode | Specialist Behavior |
+|------|---------------------|
+| `PRODUCTION_SAFE` | Source-to-sink proofing and non-invasive validation only |
+| `STAGING_ACTIVE` | Targeted active verification with strict attempt caps |
+| `LAB_FULL` | Full dynamic validation across injection families |
+| `LAB_RED_TEAM` | Multi-step chain simulation in isolated lab only |
+
+## Safety Gates (Required)
+
+1. Read `deliverables/engagement_profile.md` before active verification.
+2. If no mode is available, default to `PRODUCTION_SAFE`.
+3. Enforce kill-switch and stop on stability signals.
+4. Never execute destructive commands or data-damaging payloads.
+
 ## Injection Types Covered
 
 | Type | Sinks | Impact |
@@ -50,6 +66,12 @@ This specialist skill performs comprehensive injection analysis beyond basic SQL
 | Log Injection | Log4j, logging frameworks | Log forging, RCE (Log4Shell) |
 
 ## Execution Instructions
+
+### Step 0: Mode & Scope Alignment
+
+- Load mode/scope/rate limits from `deliverables/engagement_profile.md`.
+- Respect `deliverables/verification_scope.md` when present.
+- For `PRODUCTION_SAFE`, validate via minimal indicators and bounded retries.
 
 ### Phase 1: NoSQL Injection Analysis (3 Parallel Agents)
 

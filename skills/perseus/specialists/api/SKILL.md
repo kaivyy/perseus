@@ -36,6 +36,22 @@ This specialist skill performs comprehensive API security analysis covering OWAS
 
 **Goal:** Deep-dive into API-specific vulnerabilities that generic scans might miss.
 
+## Engagement Mode Compatibility
+
+| Mode | Specialist Behavior |
+|------|---------------------|
+| `PRODUCTION_SAFE` | Static/code-path validation and minimal non-disruptive checks only |
+| `STAGING_ACTIVE` | Active endpoint verification with strict throttling |
+| `LAB_FULL` | Broad dynamic API verification in isolated lab |
+| `LAB_RED_TEAM` | Controlled attack-chain simulation on synthetic/test data only |
+
+## Safety Gates (Required)
+
+1. Read `deliverables/engagement_profile.md` before running active checks.
+2. If mode is missing, default to `PRODUCTION_SAFE`.
+3. Abort and mark `ABORTED-SAFETY` if kill-switch thresholds are exceeded.
+4. Never run destructive actions or unbounded API fuzzing.
+
 ## OWASP API Security Top 10 Coverage
 
 | ID | Vulnerability | Description |
@@ -62,6 +78,12 @@ This specialist skill performs comprehensive API security analysis covering OWAS
 | gRPC | Reflection enabled, missing auth, message size limits |
 
 ## Execution Instructions
+
+### Step 0: Mode & Scope Alignment
+
+- Load engagement mode, scope, and request limits from `deliverables/engagement_profile.md`.
+- Respect `deliverables/verification_scope.md` if present.
+- In `PRODUCTION_SAFE`, keep checks passive-first and low-rate.
 
 ### Phase 1: REST API Analysis (4 Parallel Agents)
 

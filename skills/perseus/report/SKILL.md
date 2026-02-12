@@ -47,9 +47,11 @@ This skill executes the **Reporting Phase** of the Perseus framework. It synthes
 Read all files in `deliverables/`:
 
 **Core Phase Deliverables:**
+- `engagement_profile.md` (Mode, scope, constraints)
 - `code_analysis_deliverable.md` (Scan)
 - All `*_analysis.md` files (Audit)
 - `exploitation_report.md` (Exploit)
+- `verification_scope.md` (Verification limits and approved window)
 
 **Specialist Deliverables (if present):**
 - `api_security_analysis.md` (API + GraphQL + WebSocket + OAuth)
@@ -77,6 +79,18 @@ Read all files in `deliverables/`:
 - POTENTIAL: Multiply by 0.7 (likely exploitable)
 - THEORETICAL: Multiply by 0.4 (needs specific conditions)
 
+**Confidence Factor:**
+- High: Multiply by 1.0
+- Medium: Multiply by 0.75
+- Low: Multiply by 0.5
+
+**Verification Context Factor:**
+- VERIFIED in `PRODUCTION_SAFE`: Multiply by 1.0
+- VERIFIED in `STAGING_ACTIVE`: Multiply by 0.9
+- VERIFIED in `LAB_FULL`: Multiply by 0.85
+- VERIFIED in `LAB_RED_TEAM`: Multiply by 0.8
+- `POTENTIAL-PROD-BLOCKED`: Multiply by 0.7
+
 ### Step 3: Generate Report
 
 Create `deliverables/SECURITY_REPORT.md` using this structure:
@@ -88,6 +102,7 @@ Create `deliverables/SECURITY_REPORT.md` using this structure:
 **Assessment Date:** [Date]
 **Methodology:** Perseus Security Framework v2.0
 **Scope:** [Repository/Application name]
+**Engagement Mode:** [PRODUCTION_SAFE/STAGING_ACTIVE/LAB_FULL/LAB_RED_TEAM]
 
 ---
 
@@ -113,6 +128,14 @@ Create `deliverables/SECURITY_REPORT.md` using this structure:
 | High | X | Y | Z |
 | Medium | X | Y | Z |
 | Low | X | Y | Z |
+
+### Verification Coverage
+| Category | Count |
+|----------|-------|
+| Verified | X |
+| Failed Verification | Y |
+| Potential (Prod Blocked) | Z |
+| Aborted (Safety Kill-Switch) | W |
 
 ### Key Findings
 1. **[Most Critical Finding]** - Brief description and impact
@@ -291,6 +314,7 @@ Create `deliverables/SECURITY_REPORT.md` using this structure:
 ### POTENTIAL-001: [Title]
 **Severity:** [Estimated]
 **Reason Not Verified:** [Why exploitation wasn't confirmed]
+**Mode Constraint:** [Why blocked in current mode]
 **Recommendation:** [What to do about it]
 
 ---

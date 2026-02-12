@@ -1,9 +1,9 @@
 ---
 name: perseus:audit
-description: Use when analyzing components for vulnerabilities (Phase 3 - Parallel Analysis)
+description: Use when analyzing components for vulnerabilities (Phase 2 - Parallel Analysis)
 ---
 
-# Perseus Audit (Phase 3)
+# Perseus Audit (Phase 2)
 
 ## Overview
 
@@ -15,6 +15,21 @@ This skill executes the **Vulnerability Analysis Phase** of the Perseus framewor
 1.  **Launch 5 Agents in Parallel:** Injection, XSS, Auth, Authz, SSRF.
 2.  **Negative Analysis Loop:** Trace Source -> Sanitizers -> Sink -> Verdict.
 3.  **Exploit Queue:** Generate actionable vulnerabilities for verification.
+
+## Confidence Scoring (Required)
+
+Assign confidence to every finding:
+
+| Confidence | Criteria |
+|------------|----------|
+| High | Direct source-to-sink path with clear missing defense and reproducible trigger |
+| Medium | Strong path evidence, but one assumption (runtime config/auth state) remains |
+| Low | Pattern match only; data flow or trigger path is incomplete |
+
+Prioritize exploit queue in this order:
+1. High + Critical/High severity
+2. Medium + Critical/High severity
+3. Remaining findings
 
 ## Execution Instructions
 
@@ -54,5 +69,13 @@ Each agent must produce a specialized report in `deliverables/`:
 *   `auth_analysis.md`
 *   `authz_analysis.md`
 *   `ssrf_analysis.md`
+
+For each finding include:
+*   **Finding ID**
+*   **Source -> Sink Path**
+*   **Missing or Mismatched Defense**
+*   **Preconditions**
+*   **Confidence:** `High` | `Medium` | `Low`
+*   **Exploit Candidate:** `Yes` | `No` (and reason)
 
 **Next Step:** Proceed to `perseus:exploit` to verify findings with Proof-of-Concept.

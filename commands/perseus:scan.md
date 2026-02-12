@@ -1,5 +1,7 @@
 ---
+name: perseus:scan
 description: Run security reconnaissance on the codebase (Phase 1 & 2)
+skill: perseus:scan
 ---
 
 # /perseus:scan

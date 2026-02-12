@@ -36,6 +36,22 @@ This specialist skill performs comprehensive file security analysis including pa
 
 **Goal:** Find all file-related vulnerabilities that could lead to arbitrary file read/write or code execution.
 
+## Engagement Mode Compatibility
+
+| Mode | Specialist Behavior |
+|------|---------------------|
+| `PRODUCTION_SAFE` | Static flow analysis and minimal non-disruptive validation |
+| `STAGING_ACTIVE` | Controlled upload/path validation with throttling |
+| `LAB_FULL` | Expanded dynamic verification of file attack paths |
+| `LAB_RED_TEAM` | Chain simulation against isolated storage and synthetic files only |
+
+## Safety Gates (Required)
+
+1. Read `deliverables/engagement_profile.md` before active file-path/upload tests.
+2. Default to `PRODUCTION_SAFE` if mode is absent.
+3. Enforce kill-switch thresholds and stop on instability.
+4. Never overwrite, delete, or alter real production data during verification.
+
 ## File Security Risks Covered
 
 | Risk | Description | Impact |
@@ -48,6 +64,12 @@ This specialist skill performs comprehensive file security analysis including pa
 | SSRF via File | File:// protocol abuse | Internal network access |
 
 ## Execution Instructions
+
+### Step 0: Mode & Scope Alignment
+
+- Load mode/scope/limits from `deliverables/engagement_profile.md`.
+- Respect `deliverables/verification_scope.md` when present.
+- In production mode, prefer code-level evidence and minimal safe probes.
 
 ### Phase 1: Path Traversal Analysis (4 Parallel Agents)
 

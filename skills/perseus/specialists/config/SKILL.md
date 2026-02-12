@@ -34,6 +34,22 @@ This specialist skill analyzes security configuration including HTTP headers, TL
 
 **Goal:** Ensure all security configurations follow best practices and don't introduce vulnerabilities.
 
+## Engagement Mode Compatibility
+
+| Mode | Specialist Behavior |
+|------|---------------------|
+| `PRODUCTION_SAFE` | Configuration and manifest analysis with passive verification |
+| `STAGING_ACTIVE` | Controlled config validation with limited active checks |
+| `LAB_FULL` | Broad environment hardening validation in lab |
+| `LAB_RED_TEAM` | Defensive stress simulation for infra misconfig chains in isolated lab |
+
+## Safety Gates (Required)
+
+1. Read `deliverables/engagement_profile.md` before active infra validation.
+2. Default to `PRODUCTION_SAFE` if engagement mode is missing.
+3. Enforce kill-switch thresholds and stop on environment instability.
+4. Never modify live infrastructure state without explicit approval.
+
 ## Configuration Risks Covered
 
 | Risk | Description | Impact |
@@ -48,6 +64,12 @@ This specialist skill analyzes security configuration including HTTP headers, TL
 | K8s Insecurity | No RBAC, privileged pods | Cluster compromise |
 
 ## Execution Instructions
+
+### Step 0: Mode & Scope Alignment
+
+- Load mode/scope/limits from `deliverables/engagement_profile.md`.
+- Respect `deliverables/verification_scope.md` when present.
+- Keep production checks read-only and non-disruptive.
 
 ### Phase 1: HTTP Security Headers (3 Parallel Agents)
 

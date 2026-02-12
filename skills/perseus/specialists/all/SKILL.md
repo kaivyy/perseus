@@ -24,6 +24,22 @@ This skill orchestrates ALL 8 specialist skills in parallel for maximum coverage
 
 **Goal:** Run all specialists simultaneously for thorough security analysis.
 
+## Engagement Mode Compatibility
+
+| Mode | Orchestrator Behavior |
+|------|------------------------|
+| `PRODUCTION_SAFE` | Run specialists with passive-first and low-rate verification constraints |
+| `STAGING_ACTIVE` | Allow active specialist checks with throttling |
+| `LAB_FULL` | Allow broad dynamic specialist verification in isolated lab |
+| `LAB_RED_TEAM` | Allow chain-based specialist simulation with strict kill-switches |
+
+## Safety Gates (Required)
+
+1. Read `deliverables/engagement_profile.md` before launching specialists.
+2. Default to `PRODUCTION_SAFE` if engagement mode is not available.
+3. Propagate mode and rate limits to each specialist task.
+4. Stop all specialists if any run reports `ABORTED-SAFETY`.
+
 ## Specialists Included
 
 | Skill | Coverage | Output |
@@ -32,12 +48,18 @@ This skill orchestrates ALL 8 specialist skills in parallel for maximum coverage
 | `perseus-injection` | NoSQL, LDAP, XPath, SSTI, Command | `injection_deep_analysis.md` |
 | `perseus-crypto` | JWT, Hashing, Encryption, Secrets | `crypto_security_analysis.md` |
 | `perseus-supply-chain` | CVEs, Dependencies, Licenses | `supply_chain_analysis.md` |
-| `perseus-file-security` | Path Traversal, Upload, XXE | `file_security_analysis.md` |
+| `perseus-file` | Path Traversal, Upload, XXE | `file_security_analysis.md` |
 | `perseus-logic` | Race Conditions, Business Logic | `business_logic_analysis.md` |
 | `perseus-client` | DOM XSS, Prototype Pollution | `client_side_analysis.md` |
 | `perseus-config` | Headers, CORS, Cookies, TLS | `config_security_analysis.md` |
 
 ## Execution Instructions
+
+### Step 0: Mode & Scope Alignment
+
+- Load mode/scope/limits from `deliverables/engagement_profile.md`.
+- Respect `deliverables/verification_scope.md` when present.
+- Announce mode before launching specialists.
 
 ### Step 1: Announce Start
 
@@ -56,7 +78,7 @@ Parallel Tasks:
 2. Task: "Run injection specialist" -> Skill: perseus-injection
 3. Task: "Run crypto specialist" -> Skill: perseus-crypto
 4. Task: "Run supply chain specialist" -> Skill: perseus-supply-chain
-5. Task: "Run file security specialist" -> Skill: perseus-file-security
+5. Task: "Run file security specialist" -> Skill: perseus-file
 6. Task: "Run business logic specialist" -> Skill: perseus-logic
 7. Task: "Run client-side specialist" -> Skill: perseus-client
 8. Task: "Run config specialist" -> Skill: perseus-config

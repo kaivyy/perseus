@@ -35,6 +35,22 @@ This specialist skill analyzes business logic vulnerabilities, race conditions, 
 
 **Goal:** Find logic flaws that allow users to bypass business rules, manipulate data, exploit race conditions, or abuse AI systems.
 
+## Engagement Mode Compatibility
+
+| Mode | Specialist Behavior |
+|------|---------------------|
+| `PRODUCTION_SAFE` | Passive logic tracing and low-risk validation only |
+| `STAGING_ACTIVE` | Controlled workflow manipulation tests with test accounts |
+| `LAB_FULL` | Broad scenario replay for race/logic weaknesses |
+| `LAB_RED_TEAM` | Multi-step business attack-chain simulation with synthetic data |
+
+## Safety Gates (Required)
+
+1. Read `deliverables/engagement_profile.md` before active workflow tests.
+2. If mode is unclear, default to `PRODUCTION_SAFE`.
+3. Enforce kill-switch limits and halt on service degradation.
+4. Never alter real balances, inventory, or irreversible user state.
+
 ## Business Logic Risks Covered
 
 | Risk | Description | Impact |
@@ -48,6 +64,12 @@ This specialist skill analyzes business logic vulnerabilities, race conditions, 
 | Limit Bypass | Circumventing usage limits | Resource abuse |
 
 ## Execution Instructions
+
+### Step 0: Mode & Scope Alignment
+
+- Load mode/scope/limits from `deliverables/engagement_profile.md`.
+- Respect `deliverables/verification_scope.md` if present.
+- For active modes, use designated test identities and synthetic transactions.
 
 ### Phase 1: Race Condition Analysis (4 Parallel Agents)
 

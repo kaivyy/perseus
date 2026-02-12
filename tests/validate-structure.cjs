@@ -6,6 +6,22 @@ const SKILLS_DIR = path.join(PLUGIN_ROOT, 'skills', 'perseus');
 const SPECIALISTS_DIR = path.join(SKILLS_DIR, 'specialists');
 const COMMANDS_DIR = path.join(PLUGIN_ROOT, 'commands');
 
+const parseFrontmatter = (content) => {
+  const match = content.match(/^---\n([\s\S]*?)\n---/);
+  if (!match) return null;
+
+  const frontmatter = {};
+  for (const line of match[1].split('\n')) {
+    const colonIdx = line.indexOf(':');
+    if (colonIdx <= 0) continue;
+    const key = line.slice(0, colonIdx).trim();
+    const value = line.slice(colonIdx + 1).trim().replace(/^['"]|['"]$/g, '');
+    frontmatter[key] = value;
+  }
+
+  return frontmatter;
+};
+
 console.log('🔍 Validating Perseus Plugin Structure...\n');
 
 // 1. Check Metadata Files
@@ -20,6 +36,7 @@ const requiredFiles = [
 
 let errors = 0;
 let passed = 0;
+const skillNames = new Set();
 
 console.log('📁 Checking Metadata Files...');
 requiredFiles.forEach(file => {
@@ -43,10 +60,12 @@ coreSkills.forEach(skill => {
     errors++;
   } else {
     const content = fs.readFileSync(skillFile, 'utf8');
-    if (!content.startsWith('---') || !content.includes('name:') || !content.includes('description:')) {
+    const frontmatter = parseFrontmatter(content);
+    if (!frontmatter || !frontmatter.name || !frontmatter.description) {
       console.error(`❌ Invalid Frontmatter in: ${skill}/SKILL.md`);
       errors++;
     } else {
+      skillNames.add(frontmatter.name);
       console.log(`✅ Valid Core Skill: ${skill}`);
       passed++;
     }
@@ -64,35 +83,50 @@ specialistSkills.forEach(skill => {
     errors++;
   } else {
     const content = fs.readFileSync(skillFile, 'utf8');
-    if (!content.startsWith('---') || !content.includes('name:') || !content.includes('description:')) {
+    const frontmatter = parseFrontmatter(content);
+    if (!frontmatter || !frontmatter.name || !frontmatter.description) {
       console.error(`❌ Invalid Frontmatter in specialist: ${skill}/SKILL.md`);
       errors++;
     } else {
+      skillNames.add(frontmatter.name);
       console.log(`✅ Valid Specialist Skill: ${skill}`);
       passed++;
     }
   }
 });
 
+const validateCommand = (cmd, label) => {
+  const cmdFile = path.join(COMMANDS_DIR, cmd);
+  if (!fs.existsSync(cmdFile)) {
+    console.error(`❌ Missing ${label} command: ${cmd}`);
+    errors++;
+    return;
+  }
+
+  const content = fs.readFileSync(cmdFile, 'utf8');
+  const frontmatter = parseFrontmatter(content);
+  if (!frontmatter || !frontmatter.name || !frontmatter.description || !frontmatter.skill) {
+    console.error(`❌ Invalid Frontmatter in ${label} command: ${cmd} (require: name, description, skill)`);
+    errors++;
+    return;
+  }
+
+  if (!skillNames.has(frontmatter.skill)) {
+    console.error(`❌ Command ${cmd} references missing skill: ${frontmatter.skill}`);
+    errors++;
+    return;
+  }
+
+  console.log(`✅ Valid ${label} Command: ${cmd}`);
+  passed++;
+};
+
 // 4. Validate Commands (Short aliases)
 console.log('\n⚡ Checking Short Commands...');
 const shortCommands = ['scan.md', 'audit.md', 'exploit.md', 'report.md', 'start.md', 'specialist.md'];
 
 shortCommands.forEach(cmd => {
-  const cmdFile = path.join(COMMANDS_DIR, cmd);
-  if (!fs.existsSync(cmdFile)) {
-    console.error(`❌ Missing short command: ${cmd}`);
-    errors++;
-  } else {
-    const content = fs.readFileSync(cmdFile, 'utf8');
-    if (!content.startsWith('---') || !content.includes('description:')) {
-      console.error(`❌ Invalid Frontmatter in command: ${cmd}`);
-      errors++;
-    } else {
-      console.log(`✅ Valid Short Command: ${cmd}`);
-      passed++;
-    }
-  }
+  validateCommand(cmd, 'Short');
 });
 
 // 5. Validate Commands (Full perseus: prefix)
@@ -115,20 +149,7 @@ const perseusCommands = [
 ];
 
 perseusCommands.forEach(cmd => {
-  const cmdFile = path.join(COMMANDS_DIR, cmd);
-  if (!fs.existsSync(cmdFile)) {
-    console.error(`❌ Missing perseus command: ${cmd}`);
-    errors++;
-  } else {
-    const content = fs.readFileSync(cmdFile, 'utf8');
-    if (!content.startsWith('---') || !content.includes('description:')) {
-      console.error(`❌ Invalid Frontmatter in command: ${cmd}`);
-      errors++;
-    } else {
-      console.log(`✅ Valid Perseus Command: ${cmd}`);
-      passed++;
-    }
-  }
+  validateCommand(cmd, 'Perseus');
 });
 
 // Summary

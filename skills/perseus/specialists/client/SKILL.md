@@ -36,6 +36,22 @@ This specialist skill performs deep client-side JavaScript security analysis, fo
 
 **Goal:** Find DOM-based XSS, prototype pollution, and framework-specific vulnerabilities.
 
+## Engagement Mode Compatibility
+
+| Mode | Specialist Behavior |
+|------|---------------------|
+| `PRODUCTION_SAFE` | Code-level and rendering-path analysis, minimal runtime probes |
+| `STAGING_ACTIVE` | Controlled browser-side verification with throttling |
+| `LAB_FULL` | Expanded dynamic client attack-surface validation |
+| `LAB_RED_TEAM` | End-to-end client attack-chain simulation in isolated lab |
+
+## Safety Gates (Required)
+
+1. Read `deliverables/engagement_profile.md` before active runtime testing.
+2. Default to `PRODUCTION_SAFE` when mode is not specified.
+3. Enforce kill-switch thresholds and stop on instability.
+4. Never execute persistent or user-impacting payloads in production.
+
 ## Client-Side Risks Covered
 
 | Risk | Description | Impact |
@@ -49,6 +65,12 @@ This specialist skill performs deep client-side JavaScript security analysis, fo
 | Client Storage | Sensitive data exposure | Session hijacking |
 
 ## Execution Instructions
+
+### Step 0: Mode & Scope Alignment
+
+- Load mode/scope/limits from `deliverables/engagement_profile.md`.
+- Respect `deliverables/verification_scope.md` when present.
+- In `PRODUCTION_SAFE`, prefer static and minimal observable checks only.
 
 ### Phase 1: React/Next.js Security Analysis (5 Parallel Agents)
 

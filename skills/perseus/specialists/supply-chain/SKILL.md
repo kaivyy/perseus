@@ -36,6 +36,22 @@ This specialist skill performs comprehensive supply chain analysis including kno
 
 **Goal:** Identify vulnerable, malicious, or risky dependencies before they compromise the application.
 
+## Engagement Mode Compatibility
+
+| Mode | Specialist Behavior |
+|------|---------------------|
+| `PRODUCTION_SAFE` | Manifest and advisory analysis only (passive) |
+| `STAGING_ACTIVE` | Controlled resolver/registry validation in staging |
+| `LAB_FULL` | Deep dependency behavior validation in isolated lab |
+| `LAB_RED_TEAM` | Confusion/typosquat simulation against private test registries only |
+
+## Safety Gates (Required)
+
+1. Read `deliverables/engagement_profile.md` before active package resolution checks.
+2. Default to `PRODUCTION_SAFE` when mode is missing.
+3. Apply kill-switch thresholds for any active install/build experiments.
+4. Never publish or interact with unauthorized public packages as part of testing.
+
 ## Supply Chain Risks Covered
 
 | Risk | Description | Impact |
@@ -49,6 +65,12 @@ This specialist skill performs comprehensive supply chain analysis including kno
 | Abandoned Packages | Unmaintained dependencies | Future risk |
 
 ## Execution Instructions
+
+### Step 0: Mode & Scope Alignment
+
+- Load mode/scope/limits from `deliverables/engagement_profile.md`.
+- Respect `deliverables/verification_scope.md` if present.
+- Keep production operations read-only and advisory-driven.
 
 ### Phase 1: Manifest Discovery (1 Agent)
 

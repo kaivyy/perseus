@@ -1,5 +1,7 @@
 ---
+name: perseus:start
 description: Run the full automated Perseus security assessment (Scan -> Audit -> Exploit -> Report)
+skill: perseus:start
 ---
 
 # /perseus:start

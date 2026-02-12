@@ -1,5 +1,7 @@
 ---
-description: Generate the final executive security report (Phase 5)
+name: perseus:report
+description: Generate the final executive security report (Phase 4)
+skill: perseus:report
 ---
 
 # /perseus:report

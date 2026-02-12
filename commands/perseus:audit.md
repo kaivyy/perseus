@@ -1,5 +1,7 @@
 ---
-description: Perform deep-dive vulnerability analysis on identified components (Phase 3)
+name: perseus:audit
+description: Perform deep-dive vulnerability analysis on identified components (Phase 2)
+skill: perseus:audit
 ---
 
 # /perseus:audit

@@ -36,6 +36,22 @@ This specialist skill performs comprehensive cryptographic analysis including JW
 
 **Goal:** Ensure cryptographic implementations follow security best practices.
 
+## Engagement Mode Compatibility
+
+| Mode | Specialist Behavior |
+|------|---------------------|
+| `PRODUCTION_SAFE` | Configuration and implementation analysis, minimal runtime checks |
+| `STAGING_ACTIVE` | Controlled token/crypto validation with throttling |
+| `LAB_FULL` | Extensive verification of crypto edge cases in lab |
+| `LAB_RED_TEAM` | Adversarial misuse simulation on test identities and synthetic keys |
+
+## Safety Gates (Required)
+
+1. Read `deliverables/engagement_profile.md` before any runtime validation.
+2. Default to `PRODUCTION_SAFE` if mode is unspecified.
+3. Enforce kill-switch thresholds from engagement profile.
+4. Never expose real secrets, keys, or live credentials in outputs.
+
 ## Cryptographic Issues Covered
 
 | Category | Issues | Impact |
@@ -47,6 +63,12 @@ This specialist skill performs comprehensive cryptographic analysis including JW
 | Key Management | Hardcoded keys, insecure storage | Full compromise |
 
 ## Execution Instructions
+
+### Step 0: Mode & Scope Alignment
+
+- Load mode/scope/limits from `deliverables/engagement_profile.md`.
+- Respect `deliverables/verification_scope.md` when present.
+- Keep production checks passive-first and evidence-based.
 
 ### Phase 1: JWT Analysis (4 Parallel Agents)
 
