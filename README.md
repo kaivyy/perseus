@@ -89,6 +89,21 @@ git clone https://github.com/kaivyy/perseus.git ~/.config/opencode/perseus && \
 
 ---
 
+## Engagement Modes
+
+Perseus uses explicit verification modes during assessment:
+
+| Mode | Environment | Verification Style |
+|------|-------------|--------------------|
+| `PRODUCTION_SAFE` | Live production | Passive-first checks + minimal non-disruptive validation |
+| `STAGING_ACTIVE` | Staging/pre-production | Active verification with strict throttling |
+| `LAB_FULL` | Isolated lab | Broad dynamic verification |
+| `LAB_RED_TEAM` | Dedicated security lab | Controlled adversarial chain simulation with kill-switches |
+
+Default mode is `PRODUCTION_SAFE` when environment is unclear.
+
+---
+
 ## Core Assessment Phases
 
 Perseus follows a structured 4-phase methodology:
@@ -123,11 +138,11 @@ Deep white-box analysis using Negative Analysis Loop (Source → Flow → Sink �
 **Wave 3:** JWT, Crypto, Race Conditions, Business Logic
 
 ### Phase 3: Exploit (Verification)
-Verify findings with safe Proof-of-Concept payloads.
+Verify findings with mode-aware safe Proof-of-Concept payloads.
 
 | Command | Agents | Output |
 |---------|--------|--------|
-| `/exploit` | 14 parallel agents | `deliverables/exploitation_report.md` |
+| `/exploit` | Mode-aware verifiers | `deliverables/exploitation_report.md` |
 
 **Safe Payloads Only:**
 - SQL: `SLEEP(5)`, `AND 1=1`
@@ -144,6 +159,7 @@ Synthesize all findings into professional security report.
 
 **Report Includes:**
 - Executive Summary & Risk Overview
+- Engagement mode and verification coverage
 - Technologies Analyzed (language, framework, infrastructure)
 - Verified Exploits with PoC
 - Infrastructure Security (Docker, CI/CD, Cloud, K8s)
@@ -210,6 +226,7 @@ After a full assessment, the `deliverables/` directory contains:
 
 ```
 deliverables/
+├── engagement_profile.md          # Mode, scope, limits, kill-switch thresholds
 ├── code_analysis_deliverable.md    # Scan results (multi-language)
 ├── sql_injection_analysis.md       # Audit reports
 ├── command_injection_analysis.md
@@ -232,6 +249,7 @@ deliverables/
 ├── file_security_analysis.md
 ├── client_side_analysis.md
 ├── config_security_analysis.md     # Includes Docker/CI/K8s
+├── verification_scope.md           # Verification boundaries and approved test window
 ├── exploitation_report.md          # Verified exploits
 └── SECURITY_REPORT.md              # Final executive report
 ```
@@ -318,6 +336,10 @@ Perseus is designed for **defensive security testing only**:
 
 - All analysis is performed on **your own codebase**
 - Safe payloads only (no destructive operations)
+- `PRODUCTION_SAFE` is the default mode
+- Aggressive simulation is restricted to staging/lab modes
+- `LAB_RED_TEAM` requires isolated environment and non-production data
+- Kill-switch can stop active tests with `ABORTED-SAFETY`
 - No data exfiltration
 - Evidence-based reporting (no hallucinations)
 - Equivalent to running security linters or SAST tools
@@ -401,6 +423,13 @@ Should contain `SessionStart` configuration.
 ---
 
 ## Changelog
+
+### v2.2.1 (2026-02)
+- Added engagement modes: `PRODUCTION_SAFE`, `STAGING_ACTIVE`, `LAB_FULL`, `LAB_RED_TEAM`
+- Added mode-aware verification and specialist safety gates
+- Added kill-switch behavior and `ABORTED-SAFETY` outcomes
+- Added new deliverables: `engagement_profile.md`, `verification_scope.md`
+- Improved reporting with verification coverage and context-aware risk weighting
 
 ### v2.0.0 (2026-02)
 - **Multi-Language Support**: Added support for 8 languages (JS, Go, PHP, Python, Rust, Java, Ruby, C#)

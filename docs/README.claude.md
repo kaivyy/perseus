@@ -75,6 +75,27 @@ You should see symlinks pointing to Perseus skills.
 | `/perseus:client` | React, Next.js, Vue, Angular |
 | `/perseus:config` | Docker, CI/CD, Cloud, Kubernetes |
 
+### Engagement Modes
+
+Perseus verification is mode-aware:
+
+| Mode | Environment | Behavior |
+|------|-------------|----------|
+| `PRODUCTION_SAFE` | Live production | Passive-first + minimal non-disruptive verification |
+| `STAGING_ACTIVE` | Staging/pre-production | Active verification with throttling |
+| `LAB_FULL` | Isolated lab | Broad dynamic verification |
+| `LAB_RED_TEAM` | Dedicated security lab | Controlled adversarial chain simulation with kill-switches |
+
+Default mode is `PRODUCTION_SAFE`.
+
+### Key Deliverables
+
+After `/start`, review:
+- `deliverables/engagement_profile.md` (mode, scope, rate limits, kill-switch thresholds)
+- `deliverables/verification_scope.md` (approved verification boundaries)
+- `deliverables/exploitation_report.md` (verification outcomes including `POTENTIAL-PROD-BLOCKED` / `ABORTED-SAFETY`)
+- `deliverables/SECURITY_REPORT.md` (final risk report)
+
 ## How It Works
 
 ### Plugin Structure
