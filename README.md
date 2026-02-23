@@ -401,6 +401,11 @@ Should contain `SessionStart` configuration.
 
 ## Changelog
 
+### v2.2.2 (2026-02)
+- Simplified slash commands to 3 main entries plus `/specialist`
+- Renamed command files to Windows-safe filenames
+- Updated docs and structure validation to match new command set
+
 ### v2.2.1 (2026-02)
 - Added engagement modes: `PRODUCTION_SAFE`, `STAGING_ACTIVE`, `LAB_FULL`, `LAB_RED_TEAM`
 - Added mode-aware verification and specialist safety gates

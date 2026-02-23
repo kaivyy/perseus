@@ -9,7 +9,7 @@
     {
       "name": "perseus",
       "description": "Multi-language security assessment (JS, Go, PHP, Python, Rust, Java, Ruby, C#)",
-      "version": "2.2.0",
+      "version": "2.2.2",
       "source": "./",
       "author": {
         "name": "Kaivy",
