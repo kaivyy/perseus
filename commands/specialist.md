@@ -1,7 +1,7 @@
 ---
 name: specialist
-description: Alias for perseus:specialist - Run all specialist skills in parallel
+description: Alias for perseus:specialist - Run all specialist skills
 skill: perseus-specialist
 ---
 
-Alias for `/perseus:specialist`. Runs all 8 specialist deep-dive skills.
+Alias for `/perseus:specialist`. Runs all Perseus specialist skills in parallel.

@@ -77,13 +77,11 @@ git clone https://github.com/kaivyy/perseus.git ~/.config/opencode/perseus && \
 # Full automated assessment (with smart auto-detect)
 /start
 
-# Or run phases individually
+# Or run key steps manually
 /scan        # Phase 1: Reconnaissance
-/audit       # Phase 2: Vulnerability Analysis
-/exploit     # Phase 3: PoC Verification
 /report      # Phase 4: Executive Report
 
-# Run all specialists
+# Optional: run all specialists
 /specialist
 ```
 
@@ -129,9 +127,7 @@ Maps architecture, entry points, dependencies, and attack surface.
 ### Phase 2: Audit (Vulnerability Analysis)
 Deep white-box analysis using Negative Analysis Loop (Source → Flow → Sink → Defense → Verdict).
 
-| Command | Agents | Output |
-|---------|--------|--------|
-| `/audit` | 14 parallel agents (3 waves) | Multiple `*_analysis.md` files |
+Runs automatically after Scan during `/start`.
 
 **Wave 1:** SQL Injection, Command Injection, XSS, Auth, Authz
 **Wave 2:** SSRF, Template Injection, Deserialization, Path Traversal, XXE
@@ -140,9 +136,7 @@ Deep white-box analysis using Negative Analysis Loop (Source → Flow → Sink �
 ### Phase 3: Exploit (Verification)
 Verify findings with mode-aware safe Proof-of-Concept payloads.
 
-| Command | Agents | Output |
-|---------|--------|--------|
-| `/exploit` | Mode-aware verifiers | `deliverables/exploitation_report.md` |
+Runs automatically after Audit during `/start`.
 
 **Safe Payloads Only:**
 - SQL: `SLEEP(5)`, `AND 1=1`
@@ -172,19 +166,18 @@ Synthesize all findings into professional security report.
 
 ## Specialist Deep-Dive Skills
 
-Perseus provides 8 enhanced specialist skills with multi-language support:
+Perseus provides 8 enhanced specialist skills with multi-language support. These run automatically during `/start` when relevant signals are detected. Use `/specialist` to force-run all of them.
 
-| Command | Skill | Coverage |
-|---------|-------|----------|
-| `/perseus:api` | API Security | OWASP API Top 10, GraphQL, WebSocket, OAuth, Cache, gRPC |
-| `/perseus:injection` | Advanced Injection | NoSQL, LDAP, XPath, SSTI, Command, Log4j, Expression Language |
-| `/perseus:crypto` | Cryptography | JWT (8 languages), Hashing, Encryption, Key Management |
-| `/perseus:supply-chain` | Supply Chain | CVEs (8 package managers), Typosquatting, Dependency Confusion |
-| `/perseus:file` | File Security | Path Traversal, Upload Bypass, XXE, Zip Slip (8 languages) |
-| `/perseus:logic` | Business Logic | Race Conditions, **AI/LLM Security**, Price Manipulation |
-| `/perseus:client` | Client-Side | React, Next.js SSR, Server Actions, Vue, Angular, Svelte |
-| `/perseus:config` | Configuration | **Docker, CI/CD, Cloud (AWS/GCP/Azure), Kubernetes** |
-| `/specialist` | **All Above** | Runs all 8 specialists in parallel |
+| Skill | Coverage |
+|-------|----------|
+| api | OWASP API Top 10, GraphQL, WebSocket, OAuth, Cache, gRPC |
+| injection | NoSQL, LDAP, XPath, SSTI, Command, Log4j, Expression Language |
+| crypto | JWT (8 languages), Hashing, Encryption, Key Management |
+| supply-chain | CVEs (8 package managers), Typosquatting, Dependency Confusion |
+| file | Path Traversal, Upload Bypass, XXE, Zip Slip (8 languages) |
+| logic | Business Logic, Race Conditions, **AI/LLM Security**, Price Manipulation |
+| client | React, Next.js SSR, Server Actions, Vue, Angular, Svelte |
+| config | **Docker, CI/CD, Cloud (AWS/GCP/Azure), Kubernetes** |
 
 ---
 
@@ -195,28 +188,24 @@ Perseus provides 8 enhanced specialist skills with multi-language support:
 |---------|-------------|
 | `/start` | Full automated assessment with smart auto-detect |
 | `/scan` | Phase 1: Reconnaissance |
-| `/audit` | Phase 2: Vulnerability Analysis |
-| `/exploit` | Phase 3: PoC Verification |
 | `/report` | Phase 4: Executive Report |
-| `/specialist` | Run all 8 specialist skills |
+
+### Specialist Command
+| Command | Description |
+|---------|-------------|
+| `/specialist` | Run all specialist skills |
 
 ### Full Commands
 | Command | Description |
 |---------|-------------|
 | `/perseus:start` | Full automated assessment |
 | `/perseus:scan` | Reconnaissance |
-| `/perseus:audit` | Vulnerability Analysis |
-| `/perseus:exploit` | PoC Verification |
 | `/perseus:report` | Executive Report |
-| `/perseus:specialist` | All specialists |
-| `/perseus:api` | API Security |
-| `/perseus:injection` | Advanced Injection |
-| `/perseus:crypto` | Cryptography |
-| `/perseus:supply-chain` | Supply Chain |
-| `/perseus:file` | File Security |
-| `/perseus:logic` | Business Logic + AI Security |
-| `/perseus:client` | Client-Side |
-| `/perseus:config` | Configuration + Infrastructure |
+
+### Full Specialist Command
+| Command | Description |
+|---------|-------------|
+| `/perseus:specialist` | Run all specialist skills |
 
 ---
 
@@ -262,25 +251,13 @@ deliverables/
 perseus/
 ├── commands/                    # Command definitions
 │   ├── scan.md                  # Short aliases
-│   ├── audit.md
-│   ├── exploit.md
 │   ├── report.md
 │   ├── start.md
 │   ├── specialist.md
-│   ├── perseus:scan.md          # Full commands
-│   ├── perseus:audit.md
-│   ├── perseus:exploit.md
-│   ├── perseus:report.md
-│   ├── perseus:start.md
-│   ├── perseus:specialist.md
-│   ├── perseus:api.md
-│   ├── perseus:injection.md
-│   ├── perseus:crypto.md
-│   ├── perseus:supply-chain.md
-│   ├── perseus:file.md
-│   ├── perseus:logic.md
-│   ├── perseus:client.md
-│   └── perseus:config.md
+│   ├── perseus-scan.md          # Full commands
+│   ├── perseus-report.md
+│   ├── perseus-start.md
+│   └── perseus-specialist.md
 ├── skills/
 │   └── perseus/
 │       ├── scan/SKILL.md        # Core skills
@@ -325,8 +302,8 @@ Validates:
 - Metadata files (plugin.json, manifest.json)
 - Core skills (6 skills)
 - Specialist skills (9 skills)
-- Short commands (6 commands)
-- Perseus commands (14 commands)
+- Short commands (4 commands)
+- Perseus commands (4 commands)
 
 ---
 
@@ -350,7 +327,7 @@ Perseus is designed for **defensive security testing only**:
 
 ### Hook Blocking Issue
 
-**Problem:** Perseus scan/audit fails with error like:
+**Problem:** Perseus scan/start fails with error like:
 ```
 Error: PreToolUse:Write hook error: ⚠️ Security Warning: dangerouslySetInnerHTML...
 ```
@@ -400,7 +377,7 @@ export ENABLE_SECURITY_REMINDER=0
 
 ### Skills Not Found
 
-**Problem:** `/scan` or `/audit` says skill not found.
+**Problem:** `/scan` or `/start` says skill not found.
 
 **Solution:** Run the post-install script:
 ```bash

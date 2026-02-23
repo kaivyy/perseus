@@ -123,7 +123,7 @@ const validateCommand = (cmd, label) => {
 
 // 4. Validate Commands (Short aliases)
 console.log('\n⚡ Checking Short Commands...');
-const shortCommands = ['scan.md', 'audit.md', 'exploit.md', 'report.md', 'start.md', 'specialist.md'];
+const shortCommands = ['scan.md', 'start.md', 'report.md', 'specialist.md'];
 
 shortCommands.forEach(cmd => {
   validateCommand(cmd, 'Short');
@@ -131,22 +131,7 @@ shortCommands.forEach(cmd => {
 
 // 5. Validate Commands (Full perseus: prefix)
 console.log('\n📜 Checking Perseus Commands...');
-const perseusCommands = [
-  'perseus:scan.md',
-  'perseus:audit.md',
-  'perseus:exploit.md',
-  'perseus:report.md',
-  'perseus:start.md',
-  'perseus:specialist.md',
-  'perseus:api.md',
-  'perseus:injection.md',
-  'perseus:crypto.md',
-  'perseus:supply-chain.md',
-  'perseus:file.md',
-  'perseus:logic.md',
-  'perseus:client.md',
-  'perseus:config.md'
-];
+const perseusCommands = ['perseus-scan.md', 'perseus-start.md', 'perseus-report.md', 'perseus-specialist.md'];
 
 perseusCommands.forEach(cmd => {
   validateCommand(cmd, 'Perseus');

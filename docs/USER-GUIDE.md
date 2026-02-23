@@ -55,11 +55,9 @@ Perseus will:
 ```
 Best for: First-time scans, comprehensive coverage
 
-### Phase-by-Phase (More Control)
+### Key Commands
 ```
 /scan        # Map attack surface
-/audit       # Analyze vulnerabilities
-/exploit     # Verify with safe PoCs
 /report      # Generate report
 ```
 
@@ -68,17 +66,7 @@ Best for: First-time scans, comprehensive coverage
 /specialist  # Run all 8 specialists
 ```
 
-Or run individual specialists:
-```
-/perseus:api          # API security
-/perseus:injection    # Advanced injection
-/perseus:crypto       # Cryptography
-/perseus:supply-chain # Dependencies
-/perseus:file         # File security
-/perseus:logic        # Business logic + AI
-/perseus:client       # Client-side
-/perseus:config       # Infrastructure
-```
+Specialist skills also run automatically during `/start` when relevant signals are detected.
 
 ---
 
@@ -189,14 +177,14 @@ SECURITY_REPORT.md
 
 | Scenario | Recommended Specialist |
 |----------|------------------------|
-| Building APIs | `/perseus:api` |
-| User authentication | `/perseus:crypto` |
-| File upload feature | `/perseus:file` |
-| React/Next.js frontend | `/perseus:client` |
-| Docker deployment | `/perseus:config` |
-| AI/LLM integration | `/perseus:logic` |
-| npm/pip dependencies | `/perseus:supply-chain` |
-| Complex input handling | `/perseus:injection` |
+| Building APIs | api |
+| User authentication | crypto |
+| File upload feature | file |
+| React/Next.js frontend | client |
+| Docker deployment | config |
+| AI/LLM integration | logic |
+| npm/pip dependencies | supply-chain |
+| Complex input handling | injection |
 
 ### Specialist Coverage
 
@@ -271,9 +259,9 @@ Quick reconnaissance before committing code.
 
 ### PR Security Review
 ```
-/audit
+/start
 ```
-Deep analysis for pull request reviews.
+Full analysis for pull request reviews.
 
 ### Pre-Release Assessment
 ```
@@ -283,21 +271,21 @@ Full assessment before deploying to production.
 
 ### Dependency Update Review
 ```
-/perseus:supply-chain
+/specialist
 ```
-Check for CVEs after updating dependencies.
+Run deep-dive specialists after updating dependencies.
 
 ### After Adding Authentication
 ```
-/perseus:crypto
+/specialist
 ```
-Verify JWT/password handling is secure.
+Run specialists to verify JWT/password handling.
 
 ### After API Changes
 ```
-/perseus:api
+/specialist
 ```
-Check for BOLA, rate limiting, etc.
+Run specialists to check BOLA, rate limiting, etc.
 
 ---
 

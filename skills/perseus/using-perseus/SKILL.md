@@ -21,16 +21,16 @@ The assessment MUST follow this linear sequence. Do not skip phases.
 - **Output:** `deliverables/code_analysis_deliverable.md` (Target Knowledge Graph).
 - **Stop Condition:** Do not proceed until you know *what* to attack.
 
-### Phase 2: Vulnerability Analysis (`/audit`)
+### Phase 2: Vulnerability Analysis (Audit)
 **Goal:** Prove potential vulnerability.
-- **Action:** Run `Skill: perseus:audit` (or `/audit`).
+- **Action:** Run `Skill: perseus:audit`.
 - **Logic:** Launch 5 parallel specialists (Injection, XSS, Auth, Authz, SSRF).
 - **Method:** "Negative Analysis" (Source -> Flow -> Sink -> Defense -> Verdict).
 - **Output:** Specialized reports in `deliverables/`.
 
-### Phase 3: Exploitation (`/exploit`)
+### Phase 3: Exploitation (Exploit)
 **Goal:** Verify impact (False Positive Filtering).
-- **Action:** Run `Skill: perseus:exploit` (or `/exploit`).
+- **Action:** Run `Skill: perseus:exploit`.
 - **Safety:** Use SAFE payloads only (`whoami`, `alert(1)`, `sleep`).
 - **Output:** Verified proofs in `deliverables/exploitation_report.md`.
 
@@ -38,6 +38,10 @@ The assessment MUST follow this linear sequence. Do not skip phases.
 **Goal:** Communicate risk.
 - **Action:** Run `Skill: perseus:report` (or `/report`).
 - **Output:** Final `SECURITY_REPORT.md` with executive summary and risk scoring.
+
+### Optional: Specialists (`/specialist`)
+**Goal:** Run all deep-dive specialists in parallel.
+- **Action:** Run `Skill: perseus-specialist` (or `/specialist`).
 
 ## Engagement Modes
 

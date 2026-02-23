@@ -29,7 +29,7 @@ cat <<EOF
 {
   "hookSpecificOutput": {
     "hookEventName": "SessionStart",
-    "additionalContext": "<EXTREMELY_IMPORTANT>\nYou have Perseus Security Skills.\n\n**Quick Commands:**\n- /start - Full automated assessment\n- /scan - Reconnaissance\n- /audit - Vulnerability analysis\n- /exploit - PoC verification\n- /report - Executive report\n- /specialist - All 8 specialists\n\n**Below is the full content of your 'perseus:using-perseus' skill:**\n\n${using_perseus_escaped}\n</EXTREMELY_IMPORTANT>"
+    "additionalContext": "<EXTREMELY_IMPORTANT>\nYou have Perseus Security Skills.\n\n**Quick Commands:**\n- /start - Full automated assessment\n- /scan - Reconnaissance\n- /report - Executive report\n- /specialist - Run all specialist skills\n\n**Below is the full content of your 'perseus:using-perseus' skill:**\n\n${using_perseus_escaped}\n</EXTREMELY_IMPORTANT>"
   }
 }
 EOF

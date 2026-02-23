@@ -57,23 +57,10 @@ You should see symlinks pointing to Perseus skills.
 |---------|-------------|
 | `/start` | Full automated security assessment |
 | `/scan` | Phase 1: Reconnaissance |
-| `/audit` | Phase 2: Vulnerability Analysis |
-| `/exploit` | Phase 3: PoC Verification |
 | `/report` | Phase 4: Executive Report |
-| `/specialist` | Run all 8 specialists |
+| `/specialist` | Run all specialist skills |
 
-### Specialist Commands
-
-| Command | Coverage |
-|---------|----------|
-| `/perseus:api` | API, GraphQL, WebSocket, OAuth, gRPC |
-| `/perseus:injection` | NoSQL, LDAP, XPath, SSTI, Log4j |
-| `/perseus:crypto` | JWT, Hashing, Encryption |
-| `/perseus:supply-chain` | CVEs, Typosquatting, Licenses |
-| `/perseus:file` | Path Traversal, XXE, Zip Slip |
-| `/perseus:logic` | Race Conditions, AI/LLM Security |
-| `/perseus:client` | React, Next.js, Vue, Angular |
-| `/perseus:config` | Docker, CI/CD, Cloud, Kubernetes |
+Specialist skills run automatically during `/start` and can be force-run with `/specialist`.
 
 ### Engagement Modes
 
@@ -111,7 +98,7 @@ Perseus uses Claude Code's plugin system:
 │   ├── session-start.sh     # Auto-patches security hooks
 │   └── security-whitelist.py # Whitelists Perseus paths
 ├── skills/                  # 15 security skills
-├── commands/                # 20 slash commands
+├── commands/                # 8 slash commands
 └── scripts/
     └── post-install.sh      # Creates symlinks
 ```
@@ -158,7 +145,7 @@ rm -rf ~/.claude/plugins/perseus
 
 ### Hook Blocking Issue
 
-**Problem:** Perseus scan/audit fails with security warning errors.
+**Problem:** Perseus scan/start fails with security warning errors.
 
 **Solution 1:** Restart Claude Code session (auto-patch runs on start):
 ```
@@ -177,7 +164,7 @@ export ENABLE_SECURITY_REMINDER=0
 
 ### Skills Not Found
 
-**Problem:** `/scan` or other commands say skill not found.
+**Problem:** `/scan`, `/start`, or `/report` says skill not found.
 
 **Solution:** Run post-install to create symlinks:
 ```bash

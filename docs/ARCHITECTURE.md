@@ -135,8 +135,8 @@ Load and execute the perseus:scan skill
 ```
 
 **Command Naming:**
-- Short: `/scan`, `/audit`, `/start`
-- Namespaced: `/perseus:api`, `/perseus:injection`
+- Short: `/start`, `/scan`, `/report`, `/specialist`
+- Namespaced: `/perseus:start`, `/perseus:scan`, `/perseus:report`, `/perseus:specialist`
 
 ## Phase Methodology
 
@@ -369,7 +369,7 @@ Perseus is designed for:
 ### Adding New Specialists
 
 1. Create `skills/perseus/specialists/new-skill/SKILL.md`
-2. Add command `commands/perseus:new-skill.md`
+2. Add command `commands/perseus-new-skill.md`
 3. Update `specialists/all/SKILL.md` to include it
 4. Add to `start/SKILL.md` detection logic
 

@@ -96,22 +96,22 @@ Before starting the assessment, Perseus automatically detects:
 ### Core Phases (Always Run)
 | Phase | Skill | Purpose |
 |-------|-------|---------|
-| 1 | `/scan` | Map architecture, entry points, attack surface |
-| 2 | `/audit` | Analyze all vulnerability classes |
-| 3 | `/exploit` | Verify findings with safe PoCs |
-| 4 | `/report` | Generate executive security report |
+| 1 | scan | Map architecture, entry points, attack surface |
+| 2 | audit | Analyze all vulnerability classes |
+| 3 | exploit | Verify findings with safe PoCs |
+| 4 | report | Generate executive security report |
 
 ### Specialist Deep-Dives (Run When Detected)
 | Skill | Trigger Condition | Extended Coverage |
 |-------|-------------------|-------------------|
-| `/api` | REST/GraphQL/WebSocket/gRPC | +OAuth, Cache, multi-lang |
-| `/injection` | NoSQL/Templates/Commands | +Log4j, SSTI, multi-lang |
-| `/crypto` | JWT/Encryption/Hashing | +multi-lang patterns |
-| `/supply-chain` | Package manifests | +multi-lang, typosquatting |
-| `/file` | File uploads/operations | +Zip Slip, XXE, multi-lang |
-| `/logic` | Payment/Auth/AI flows | +AI prompt injection |
-| `/client` | React/Vue/Angular/SSR | +Server Components, Actions |
-| `/config` | Always | +Docker, CI/CD, Cloud, K8s |
+| api | REST/GraphQL/WebSocket/gRPC | +OAuth, Cache, multi-lang |
+| injection | NoSQL/Templates/Commands | +Log4j, SSTI, multi-lang |
+| crypto | JWT/Encryption/Hashing | +multi-lang patterns |
+| supply-chain | Package manifests | +multi-lang, typosquatting |
+| file | File uploads/operations | +Zip Slip, XXE, multi-lang |
+| logic | Payment/Auth/AI flows | +AI prompt injection |
+| client | React/Vue/Angular/SSR | +Server Components, Actions |
+| config | Always | +Docker, CI/CD, Cloud, K8s |
 
 ## Execution Flow
 
@@ -411,14 +411,5 @@ deliverables/
 |---------|-------------|
 | `/start` | Full automated assessment with auto-detect (this skill) |
 | `/scan` | Phase 1 only - Reconnaissance |
-| `/audit` | Phase 2 only - Vulnerability analysis |
-| `/exploit` | Phase 3 only - Verification |
 | `/report` | Phase 4 only - Report generation |
-| `/api` | Specialist - API security (+GraphQL, OAuth, Cache) |
-| `/injection` | Specialist - Advanced injection (+Log4j, multi-lang) |
-| `/crypto` | Specialist - Cryptography (multi-lang) |
-| `/supply-chain` | Specialist - Dependencies (multi-lang) |
-| `/file` | Specialist - File security (+Zip Slip, XXE) |
-| `/logic` | Specialist - Business logic (+AI security) |
-| `/client` | Specialist - Client-side (+React, Next.js SSR) |
-| `/config` | Specialist - Configuration (+Docker, CI/CD, K8s) |
+| `/specialist` | Run all specialist skills in parallel |
