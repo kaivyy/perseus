@@ -1,20 +1,13 @@
 ---
-name: perseus:audit
-description: Use when analyzing components for vulnerabilities (Phase 2 - Parallel Analysis)
+name: perseus-audit
+description: "Use when performing white-box vulnerability analysis on scan results to trace source-to-sink paths, identify missing defenses, and build an exploit queue with confidence-scored findings across injection, XSS, auth, authz, and SSRF categories."
 ---
 
 # Perseus Audit (Phase 2)
 
-## Overview
+Executes the **Vulnerability Analysis Phase** of the Perseus framework. Performs deep-dive white-box analysis on components identified during the Scan phase by launching 5 parallel agents (Injection, XSS, Auth, Authz, SSRF) that trace source-to-sink paths and flag missing defenses.
 
-This skill executes the **Vulnerability Analysis Phase** of the Perseus framework. It performs deep-dive white-box analysis on the components identified during the Scan phase.
-
-**Goal:** Prove the *potential* for exploitation by finding source-to-sink paths lacking proper defense.
-
-**Methodology:**
-1.  **Launch 5 Agents in Parallel:** Injection, XSS, Auth, Authz, SSRF.
-2.  **Negative Analysis Loop:** Trace Source -> Sanitizers -> Sink -> Verdict.
-3.  **Exploit Queue:** Generate actionable vulnerabilities for verification.
+**Goal:** Prove exploitation potential by finding source-to-sink paths lacking proper defense and building a prioritized exploit queue.
 
 ## Confidence Scoring (Required)
 
