@@ -1,20 +1,13 @@
 ---
-name: perseus:scan
-description: Use when starting a security assessment to map architecture, entry points, and attack surface (Phase 1 & 2)
+name: perseus-scan
+description: "Use when starting a security assessment to map application architecture, catalog API entry points, identify injection and XSS sinks, trace data flows, and build a target knowledge graph with incremental scan support for large codebases."
 ---
 
 # Perseus Scan (Phase 1 & 2)
 
-## Overview
-
-This skill executes the **Pre-Reconnaissance Methodology** of the Perseus framework. It maps the target's digital footprint, internal architecture, and attack surface to build a "Target Knowledge Graph".
+Executes the **Pre-Reconnaissance Methodology** of the Perseus framework. Maps the target's architecture, entry points, and attack surface using 6 parallel agents across two phases (Discovery + Surface Mapping) to build a comprehensive Target Knowledge Graph.
 
 **Goal:** Zero-blind-spot understanding of what exists, how it works, and where it can be attacked.
-
-**Methodology:**
-1.  **Discovery (Parallel):** Architecture, Entry Points, Security Patterns.
-2.  **Surface Mapping (Parallel):** XSS Sinks, SSRF Sinks, Data Flows.
-3.  **Synthesis:** Comprehensive Code Analysis Report.
 
 ## Incremental Scan Mode
 
