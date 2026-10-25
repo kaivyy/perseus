@@ -78,4 +78,4 @@ For each finding include:
 *   **Confidence:** `High` | `Medium` | `Low`
 *   **Exploit Candidate:** `Yes` | `No` (and reason)
 
-**Next Step:** Proceed to `perseus:exploit` to verify findings with Proof-of-Concept.
+**Next Step:** Proceed to `perseus-exploit` to verify findings with Proof-of-Concept.

@@ -131,12 +131,12 @@ Commands in `commands/` map to skills:
 
 ```markdown
 # commands/scan.md
-Load and execute the perseus:scan skill
+Load and execute the perseus-scan skill
 ```
 
 **Command Naming:**
 - Short: `/start`, `/scan`, `/report`, `/specialist`
-- Namespaced: `/perseus:start`, `/perseus:scan`, `/perseus:report`, `/perseus:specialist`
+- Namespaced: `/perseus-start`, `/perseus-scan`, `/perseus-report`, `/perseus-specialist`
 
 ## Phase Methodology
 

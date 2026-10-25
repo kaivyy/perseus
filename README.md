@@ -198,14 +198,14 @@ Perseus provides 8 enhanced specialist skills with multi-language support. These
 ### Full Commands
 | Command | Description |
 |---------|-------------|
-| `/perseus:start` | Full automated assessment |
-| `/perseus:scan` | Reconnaissance |
-| `/perseus:report` | Executive Report |
+| `/perseus-start` | Full automated assessment |
+| `/perseus-scan` | Reconnaissance |
+| `/perseus-report` | Executive Report |
 
 ### Full Specialist Command
 | Command | Description |
 |---------|-------------|
-| `/perseus:specialist` | Run all specialist skills |
+| `/perseus-specialist` | Run all specialist skills |
 
 ---
 

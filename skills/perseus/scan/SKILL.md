@@ -87,4 +87,4 @@ Synthesize all findings into `deliverables/code_analysis_deliverable.md`.
 *   Create `outputs/schemas/` directory.
 *   Copy all discovered schema files (OpenAPI, GraphQL, JSON Schema) there.
 
-**Next Step:** Proceed to `perseus:audit` to analyze identified components for vulnerabilities.
+**Next Step:** Proceed to `perseus-audit` to analyze identified components for vulnerabilities.

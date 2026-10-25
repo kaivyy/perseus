@@ -179,7 +179,7 @@ Before starting the assessment, Perseus automatically detects:
 ---
 
 ### Phase 1: Reconnaissance
-**Action:** Invoke `Skill: perseus:scan`
+**Action:** Invoke `Skill: perseus-scan`
 
 **Agents Deployed:** 13 parallel agents covering:
 - Architecture & Entry Points (multi-language aware)
@@ -216,7 +216,7 @@ ALWAYS                      → Queue /config
 ---
 
 ### Phase 2: Core Vulnerability Analysis
-**Action:** Invoke `Skill: perseus:audit`
+**Action:** Invoke `Skill: perseus-audit`
 
 **Agents Deployed:** 14 parallel agents in 3 waves (language-aware):
 - Wave 1: SQLi, CMDi, XSS, Auth, Authz
@@ -250,7 +250,7 @@ Parallel:
 ---
 
 ### Phase 3: Exploitation & Verification
-**Action:** Invoke `Skill: perseus:exploit`
+**Action:** Invoke `Skill: perseus-exploit`
 
 **Agents Deployed:** 14 parallel agents verifying findings based on engagement mode:
 - SQL/Command/NoSQL injection verification
@@ -279,7 +279,7 @@ Parallel:
 ---
 
 ### Phase 4: Report Generation
-**Action:** Invoke `Skill: perseus:report`
+**Action:** Invoke `Skill: perseus-report`
 
 **Process:**
 1. Synthesize all deliverables
@@ -310,7 +310,7 @@ When the user invokes `/start`, execute exactly this sequence:
    - Announce: "Detected: Next.js 14 (TypeScript), MongoDB, Docker, GitHub Actions"
 
 4. Execute Phase 1:
-   - Call: Skill: perseus:scan
+   - Call: Skill: perseus-scan
    - Wait for completion
    - Announce: "Scan complete. Found X entry points, Y sinks."
 
@@ -320,7 +320,7 @@ When the user invokes `/start`, execute exactly this sequence:
    - Announce: "Will run: /api (GraphQL), /client (Next.js), /injection (MongoDB), /config (Docker+CI)"
 
 6. Execute Phase 2:
-   - Call: Skill: perseus:audit
+   - Call: Skill: perseus-audit
    - Wait for completion
    - Announce: "Audit complete. Found X potential vulnerabilities."
 
@@ -330,12 +330,12 @@ When the user invokes `/start`, execute exactly this sequence:
    - Announce: "Specialist analysis complete."
 
 8. Execute Phase 3:
-   - Call: Skill: perseus:exploit
+   - Call: Skill: perseus-exploit
    - Wait for completion
    - Announce: "Exploitation complete. X verified, Y false positives."
 
 9. Execute Phase 4:
-   - Call: Skill: perseus:report
+   - Call: Skill: perseus-report
    - Wait for completion
 
 10. Final Announcement:
