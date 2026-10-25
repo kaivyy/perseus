@@ -1,5 +1,5 @@
 ---
-name: perseus:start
+name: perseus-start
 description: Use when you want to run a full, automated penetration test from start to finish (Scan -> Audit -> Exploit -> Report)
 ---
 

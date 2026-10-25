@@ -1,5 +1,5 @@
 ---
-name: perseus:audit
+name: perseus-audit
 description: Use when analyzing components for vulnerabilities (Phase 2 - Parallel Analysis)
 ---
 

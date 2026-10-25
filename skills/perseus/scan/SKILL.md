@@ -1,5 +1,5 @@
 ---
-name: perseus:scan
+name: perseus-scan
 description: Use when starting a security assessment to map architecture, entry points, and attack surface (Phase 1 & 2)
 ---
 
