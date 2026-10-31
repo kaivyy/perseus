@@ -1,5 +1,5 @@
 ---
-name: perseus:report
+name: perseus-report
 description: Use when generating the final executive security report (Phase 4)
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: perseus:specialist
+name: perseus-specialist
 description: Run all specialist deep-dive skills in parallel for comprehensive analysis
 skill: perseus-specialist
 ---

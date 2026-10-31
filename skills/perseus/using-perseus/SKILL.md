@@ -17,26 +17,26 @@ The assessment MUST follow this linear sequence. Do not skip phases.
 
 ### Phase 1: Reconnaissance (`/scan`)
 **Goal:** Map the attack surface.
-- **Action:** Run `Skill: perseus:scan` (or `/scan`).
+- **Action:** Run `Skill: perseus-scan` (or `/scan`).
 - **Output:** `deliverables/code_analysis_deliverable.md` (Target Knowledge Graph).
 - **Stop Condition:** Do not proceed until you know *what* to attack.
 
 ### Phase 2: Vulnerability Analysis (Audit)
 **Goal:** Prove potential vulnerability.
-- **Action:** Run `Skill: perseus:audit`.
+- **Action:** Run `Skill: perseus-audit`.
 - **Logic:** Launch 5 parallel specialists (Injection, XSS, Auth, Authz, SSRF).
 - **Method:** "Negative Analysis" (Source -> Flow -> Sink -> Defense -> Verdict).
 - **Output:** Specialized reports in `deliverables/`.
 
 ### Phase 3: Exploitation (Exploit)
 **Goal:** Verify impact (False Positive Filtering).
-- **Action:** Run `Skill: perseus:exploit`.
+- **Action:** Run `Skill: perseus-exploit`.
 - **Safety:** Use SAFE payloads only (`whoami`, `alert(1)`, `sleep`).
 - **Output:** Verified proofs in `deliverables/exploitation_report.md`.
 
 ### Phase 4: Reporting (`/report`)
 **Goal:** Communicate risk.
-- **Action:** Run `Skill: perseus:report` (or `/report`).
+- **Action:** Run `Skill: perseus-report` (or `/report`).
 - **Output:** Final `SECURITY_REPORT.md` with executive summary and risk scoring.
 
 ### Optional: Specialists (`/specialist`)
