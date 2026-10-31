@@ -38,7 +38,13 @@ This skill executes the **Reporting Phase** of the Perseus framework. It synthes
 1.  **Collect:** Gather all deliverables from previous phases.
 2.  **Verify:** Prioritize verified exploits over theoretical risks.
 3.  **Contextualize:** Explain business impact, not just technical flaws.
-4.  **Remediate:** Provide language-specific, actionable fixes for each finding.
+4.  **Remediate:** Provide language-specific, actionable fixes and unified git diff patches for each finding.
+5.  **Standardize:** Output both human-readable Markdown and machine-readable SARIF formats.
+
+## Agent Execution Strategy (Dual-Mode)
+
+When executing this skill, adapt to the runtime environment:
+- **Direct Synthesis (Universal):** Read deliverables from `deliverables/`, aggregate findings, calculate CVSS scores and CWE classifications, and write the final reports directly in the current session. No subagent spawning is required for report generation.
 
 ## Execution Instructions
 
@@ -192,6 +198,8 @@ Create `deliverables/SECURITY_REPORT.md` using this structure:
 ### CRITICAL-001: [Title]
 
 **Severity:** Critical (9.5)
+**CVSS Vector:** `CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H`
+**CWE:** CWE-89 (Improper Neutralization of Special Elements used in an SQL Command)
 **Status:** VERIFIED EXPLOITABLE
 **Category:** [Injection/Auth/Config/AI/etc.]
 **Language:** [Node.js/Go/Python/etc.]
@@ -216,13 +224,13 @@ Create `deliverables/SECURITY_REPORT.md` using this structure:
 - [Specific impact: data access, RCE, etc.]
 - [Business impact: what could attacker do?]
 
-#### Remediation
-```javascript
-// Vulnerable code
-[code snippet]
-
-// Fixed code (language-specific)
-[code snippet]
+#### Remediation (Unified Patch Diff)
+```diff
+--- a/path/to/file.js
++++ b/path/to/file.js
+@@ -42,3 +42,3 @@
+- const result = await db.query("SELECT * FROM items WHERE name = '" + req.body.name + "'");
++ const result = await db.query("SELECT * FROM items WHERE name = $1", [req.body.name]);
 ```
 
 #### References
@@ -417,11 +425,34 @@ Create `deliverables/SECURITY_REPORT.md` using this structure:
 *   **Business-Aware:** Explain impact in business terms, not just technical.
 *   **Infrastructure-Aware:** Include Docker, CI/CD, Cloud, K8s findings.
 
+## SARIF v2.1.0 Export (Optional / CI/CD Ingestion)
+
+When requested or when running in CI/CD environments, generate `deliverables/report.sarif` conforming to the OASIS SARIF v2.1.0 schema:
+```json
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Perseus Security Framework",
+          "version": "2.2.2",
+          "rules": []
+        }
+      },
+      "results": []
+    }
+  ]
+}
+```
+
 ## Quality Checklist
 
 Before finalizing the report, verify:
 - [ ] All verified exploits are documented with evidence
-- [ ] All findings have language-specific remediation guidance
+- [ ] All findings have language-specific remediation guidance with unified diff patches
+- [ ] All findings include formal CWE identifiers and CVSS vector strings
 - [ ] Severity ratings are consistent
 - [ ] Infrastructure findings are included (Docker, CI/CD, Cloud, K8s)
 - [ ] AI/LLM findings are included (if applicable)
@@ -429,4 +460,4 @@ Before finalizing the report, verify:
 - [ ] No sensitive data (real credentials, PII) is included
 - [ ] Report can be shared with stakeholders
 
-**Assessment Complete.** Report saved to `deliverables/SECURITY_REPORT.md`.
+**Assessment Complete.** Report saved to `deliverables/SECURITY_REPORT.md` (and optionally `deliverables/report.sarif`).

@@ -40,20 +40,24 @@ Perseus automatically detects your project's:
 ## Installation
 
 ### Claude Code
-```
-/plugin install https://github.com/kaivyy/perseus
+```bash
+# Add marketplace then install plugin
+/plugin marketplace add kaivyy/perseus
+/plugin install perseus
 ```
 
-That's it! Everything is automatic:
-- Skills and commands auto-discovered
-- Hooks auto-registered
-- Context injected on session start
+### Antigravity CLI (`agy`)
+```bash
+# Install plugin via agy CLI
+agy plugin install kaivyy/perseus
+# Or run universal installer after git clone:
+bash scripts/post-install.sh
+```
 
 ### Codex
 ```bash
 git clone https://github.com/kaivyy/perseus.git ~/.codex/perseus
-mkdir -p ~/.agents/skills
-ln -sf ~/.codex/perseus/skills ~/.agents/skills/perseus
+bash ~/.codex/perseus/scripts/post-install.sh
 ```
 
 ### OpenCode
@@ -62,6 +66,13 @@ git clone https://github.com/kaivyy/perseus.git ~/.config/opencode/perseus && \
   mkdir -p ~/.config/opencode/plugins ~/.config/opencode/skills && \
   ln -sf ~/.config/opencode/perseus/.opencode/plugins/perseus.js ~/.config/opencode/plugins/perseus.js && \
   ln -sf ~/.config/opencode/perseus/skills ~/.config/opencode/skills/perseus
+```
+
+### Universal Agent Installer
+Perseus includes an automated installer that registers skills for Claude Code, Codex, and Antigravity CLI simultaneously:
+```bash
+git clone https://github.com/kaivyy/perseus.git
+bash perseus/scripts/post-install.sh
 ```
 
 ### Uninstall
@@ -401,10 +412,15 @@ Should contain `SessionStart` configuration.
 
 ## Changelog
 
-### v2.2.2 (2026-02)
-- Simplified slash commands to 3 main entries plus `/specialist`
-- Renamed command files to Windows-safe filenames
-- Updated docs and structure validation to match new command set
+### v2.2.2 (2026-10)
+- **Merged PR #5 & Spec Compliance:** Replaced colons with hyphens in skill names (`perseus:<x>` -> `perseus-<x>`) to conform to the Agent Skills specification; closed Issues #1 and #4.
+- **Universal Multi-Agent CLI Compatibility:** Full out-of-the-box support for **Antigravity CLI (`agy`)**, **Codex**, **Claude Code**, and **OpenCode**. Added `.antigravity-plugin/plugin.json` and 1-level flat skill resolution.
+- **Dual-Mode Agent Execution Engine:** Skills now adapt dynamically to runtime capabilities. Uses parallel subagents when supported (`Task`/`invoke_subagent`), with universal fallback to sequential direct execution in single-agent environments.
+- **Fast-Track Ripgrep & CLI Heuristics:** Embedded high-speed regex queries and terminal commands across all skills for rapid AST and code mapping without context blowout.
+- **OWASP Top 10 for LLM Security:** Upgraded AI security specialist with Indirect Prompt Injection, Insecure Output Handling, Excessive Agency / Unsafe Tool Execution, and RAG Poisoning.
+- **Unified Diff Patches & SARIF v2.1.0:** Executive reports now include unified git diff remediation snippets (`git diff` ready for `git apply`), formal CWE identifiers, and optional SARIF v2.1.0 output for GitHub Code Scanning integration.
+- **Installer Enhancements:** Updated `scripts/post-install.sh` to auto-link skills into `~/.claude/skills`, `~/.agents/skills`, and `~/.codex/skills`.
+- **Docs & Marketplace Alignment:** Updated Claude Code marketplace installation commands in README and documentation.
 
 ### v2.2.1 (2026-02)
 - Added engagement modes: `PRODUCTION_SAFE`, `STAGING_ACTIVE`, `LAB_FULL`, `LAB_RED_TEAM`
@@ -431,6 +447,7 @@ Should contain `SessionStart` configuration.
 | Platform | Guide |
 |----------|-------|
 | Claude Code | [docs/README.claude.md](docs/README.claude.md) |
+| Antigravity CLI (`agy`) | [docs/README.antigravity.md](docs/README.antigravity.md) |
 | Codex | [docs/README.codex.md](docs/README.codex.md) |
 | OpenCode | [docs/README.opencode.md](docs/README.opencode.md) |
 

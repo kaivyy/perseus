@@ -20,3 +20,12 @@ build/
 
 # Claude local storage
 .claude/
+
+# Graphify
+graphify-out/
+.graphify/
+
+# Perseus runtime deliverables & cache
+deliverables/
+outputs/
+.perseus-cache/

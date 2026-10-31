@@ -41,30 +41,28 @@ Perseus is a modular security assessment framework built as a Claude Code plugin
 
 ```
 perseus/
-├── .claude-plugin/
-│   ├── plugin.json          # Plugin manifest
-│   └── marketplace.json     # Marketplace definition
+├── .claude-plugin/          # Claude Code plugin manifests
+│   ├── plugin.json
+│   └── marketplace.json
+├── .antigravity-plugin/     # Antigravity CLI (agy) plugin manifest
+│   └── plugin.json
+├── .codex/                  # Codex CLI manifest
+│   └── manifest.json
+├── .opencode/               # OpenCode plugin manifest
+│   └── manifest.json
 ├── hooks/
 │   ├── hooks.json           # Hook registration
 │   └── session-start.sh     # Context injection
-├── skills/
-│   └── perseus/
-│       ├── scan/SKILL.md    # Phase 1
-│       ├── audit/SKILL.md   # Phase 2
-│       ├── exploit/SKILL.md # Phase 3
-│       ├── report/SKILL.md  # Phase 4
-│       ├── start/SKILL.md   # Orchestrator
-│       ├── using-perseus/SKILL.md
-│       └── specialists/
-│           ├── api/SKILL.md
-│           ├── injection/SKILL.md
-│           ├── crypto/SKILL.md
-│           ├── supply-chain/SKILL.md
-│           ├── file-security/SKILL.md
-│           ├── logic/SKILL.md
-│           ├── client/SKILL.md
-│           ├── config/SKILL.md
-│           └── all/SKILL.md
+├── skills/                  # Agent Skills (Spec compliant)
+│   ├── perseus-scan/        # Top-level skill entry points
+│   ├── perseus-audit/
+│   ├── perseus-exploit/
+│   ├── perseus-report/
+│   ├── perseus-start/
+│   ├── using-perseus/
+│   ├── perseus-specialist/
+│   ├── perseus-*/           # Specialist skills
+│   └── perseus/             # Nested modules
 ├── commands/                # Slash command definitions
 ├── docs/                    # Documentation
 └── tests/                   # Validation tests
@@ -78,7 +76,7 @@ perseus/
 ```json
 {
   "name": "perseus",
-  "version": "2.0.0",
+  "version": "2.2.2",
   "description": "Security assessment skills..."
 }
 ```
@@ -233,33 +231,36 @@ Wave 3:
 
 **Output:** `SECURITY_REPORT.md`
 
-## Agent Orchestration
+## Agent Orchestration & Execution Engine
 
-### Parallel Execution
+### Dual-Mode Execution Strategy
 
-Perseus uses Claude Code's Task tool for parallel agent execution:
+Perseus is engineered to operate seamlessly across different AI agent runtimes (Claude Code, Codex, Antigravity CLI, OpenCode):
 
+#### Mode A: Parallel Subagent Execution
+When running in an environment supporting concurrent subagents (`Task`, `Agent`, `invoke_subagent`):
 ```
 Main Agent
-    ├── Task Agent 1 (SQL Injection)
-    ├── Task Agent 2 (XSS)
-    ├── Task Agent 3 (Auth)
-    └── Task Agent 4 (SSRF)
+    ├── Subagent 1 (SQL Injection)
+    ├── Subagent 2 (XSS)
+    ├── Subagent 3 (Auth & Session)
+    └── Subagent 4 (SSRF)
          └── All run concurrently
 ```
 
-**Benefits:**
-- Faster assessments (parallel > sequential)
-- Specialized focus per agent
-- Independent failure handling
+#### Mode B: Direct Single-Agent Execution (Universal Fallback)
+When operating in a single-agent session or CLI without subagent tooling:
+- The agent does not fail or halt.
+- It executes each phase and specialist sequentially in the current session.
+- Leverages targeted `ripgrep` (`rg`) and `find` commands to locate vulnerable code without consuming excessive context window tokens.
 
-### Agent Communication
+### Agent Communication & Artifacts
 
-Agents communicate through files:
-1. Phase 1 writes `code_analysis_deliverable.md`
-2. Phase 2 reads it, writes `*_analysis.md`
-3. Phase 3 reads analysis, writes `exploitation_report.md`
-4. Phase 4 reads all, writes `SECURITY_REPORT.md`
+Agents communicate and persist state strictly through files in `deliverables/`:
+1. Phase 1 writes `deliverables/code_analysis_deliverable.md` (Target Knowledge Graph)
+2. Phase 2 writes `deliverables/audit_analysis.md` (or domain-specific `*_analysis.md`)
+3. Phase 3 writes `deliverables/exploitation_report.md` (Verified PoCs and proofs)
+4. Phase 4 synthesizes `deliverables/SECURITY_REPORT.md` (Executive Summary, Unified Patches) and optionally `deliverables/report.sarif`
 
 ## Data Flow
 

@@ -21,15 +21,29 @@ A comprehensive guide to using Perseus for security assessments.
 ### Installation
 
 **Claude Code:**
-```
-/plugin install kaivyy/perseus
+```bash
+/plugin marketplace add kaivyy/perseus
+/plugin install perseus
 ```
 
-**Verify Installation:**
+**Antigravity CLI (`agy`):**
+```bash
+agy plugin install kaivyy/perseus
+# or using local post-install script:
+bash scripts/post-install.sh
 ```
-/plugin
+
+**Codex CLI:**
+```bash
+git clone https://github.com/kaivyy/perseus.git ~/.codex/perseus
+bash ~/.codex/perseus/scripts/post-install.sh
 ```
-Look for "perseus" in the installed plugins list.
+
+**Universal Installer:**
+```bash
+git clone https://github.com/kaivyy/perseus.git
+bash perseus/scripts/post-install.sh
+```
 
 ### First Assessment
 

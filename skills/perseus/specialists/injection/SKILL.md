@@ -65,6 +65,28 @@ This specialist skill performs comprehensive injection analysis beyond basic SQL
 | Header Injection | HTTP headers, emails | Response splitting, phishing |
 | Log Injection | Log4j, logging frameworks | Log forging, RCE (Log4Shell) |
 
+## Agent Execution Strategy (Dual-Mode)
+
+When executing this skill, adapt to the runtime environment:
+- **Mode A (Subagents Available):** Launch parallel analysts for NoSQL, SQL/ORMs, Command, Template, and Expression Language injection.
+- **Mode B (Single-Agent Direct Execution — UNIVERSAL):** Execute each audit pass sequentially in the current session using ripgrep commands, analyze code flow, and output to `deliverables/injection_deep_analysis.md`.
+
+## Fast-Track CLI Commands for Injection Vulnerabilities
+
+```bash
+# 1. SQL & ORM Raw Injection Sinks
+rg -n -C 3 -i "(queryRawUnsafe|\.raw\(|exec\(.*SELECT|db\.query\(|\.query\(f?['\"].*\$|\.execute\(f?['\"].*%|SELECT\s+.*\+)"
+
+# 2. NoSQL Operator Injection ($where, $regex, unvalidated object queries)
+rg -n -C 3 -i "(\$where|\$regex|\$ne|\$gt|\.find\(.*req\.body)"
+
+# 3. OS Command Injection
+rg -n -C 3 "(child_process|exec\(|spawn\(|execSync|system\(|popen\(|os\.system|subprocess\.|exec\.Command|Runtime\.getRuntime)"
+
+# 4. Template & Expression Language Injection (SSTI / SpEL / OGNL)
+rg -n -C 3 "(render_template_string|jinja2\.Template|Twig|Blade::render|ejs\.render|Handlebars\.compile|SpelExpressionParser)"
+```
+
 ## Execution Instructions
 
 ### Step 0: Mode & Scope Alignment

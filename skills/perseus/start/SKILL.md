@@ -21,6 +21,17 @@ This master skill orchestrates the entire Perseus security assessment lifecycle 
 
 **Goal:** Zero-touch automated security assessment with professional-grade output.
 
+## Agent Execution Strategy (Dual-Mode)
+
+When orchestrating Perseus, adapt to the runtime capabilities:
+
+* **Mode A — Subagents Available (Multi-Agent/Parallel):**
+  If subagent tools (e.g. `Task`, `Agent`, `invoke_subagent`) are available, launch phase agents and specialist deep-dives in parallel.
+* **Mode B — Direct Execution (Single-Agent Fallback — UNIVERSAL):**
+  If no subagent tool exists in your runtime, **DO NOT attempt to call non-existent subagent tools**. Execute each phase directly in sequence:
+  `Phase -1 (Setup)` ➔ `Phase 0 (Detect)` ➔ `Phase 1 (Scan)` ➔ `Phase 2 (Audit)` ➔ `Phase 2.5 (Specialists)` ➔ `Phase 3 (Exploit Verify)` ➔ `Phase 4 (Report)`.
+  Ensure `mkdir -p deliverables` is run first and write all files directly into `deliverables/`.
+
 ## Engagement Mode (Required)
 
 Before running phases, select one mode:
@@ -138,6 +149,12 @@ Before starting the assessment, Perseus automatically detects:
 ### Phase 0: Auto-Detection
 **Action:** Detect project technologies
 
+```bash
+# Initialize directories and detect technology manifests
+mkdir -p deliverables outputs/schemas
+ls -d package.json go.mod composer.json requirements.txt pyproject.toml Cargo.toml pom.xml build.gradle Gemfile *.csproj Dockerfile 2>/dev/null || true
+```
+
 ```
 1. Scan for package manifests:
    - package.json → Node.js
@@ -179,9 +196,9 @@ Before starting the assessment, Perseus automatically detects:
 ---
 
 ### Phase 1: Reconnaissance
-**Action:** Invoke `Skill: perseus-scan`
+**Action:** Invoke `Skill: perseus-scan` (or run Phase 1 commands directly in session if single-agent)
 
-**Agents Deployed:** 13 parallel agents covering:
+**Coverage:**
 - Architecture & Entry Points (multi-language aware)
 - Dependencies & Secrets
 - Injection Sinks & XSS Sinks
@@ -216,9 +233,9 @@ ALWAYS                      → Queue /config
 ---
 
 ### Phase 2: Core Vulnerability Analysis
-**Action:** Invoke `Skill: perseus-audit`
+**Action:** Invoke `Skill: perseus-audit` (or run Phase 2 commands directly in session if single-agent)
 
-**Agents Deployed:** 14 parallel agents in 3 waves (language-aware):
+**Coverage:**
 - Wave 1: SQLi, CMDi, XSS, Auth, Authz
 - Wave 2: SSRF, SSTI, Deserialization, Path Traversal, XXE
 - Wave 3: JWT, Crypto, Race Conditions, Business Logic
@@ -229,12 +246,12 @@ ALWAYS                      → Queue /config
 
 ---
 
-### Phase 2.5: Specialist Deep-Dives (Parallel)
-**Action:** Invoke all detected specialists simultaneously
+### Phase 2.5: Specialist Deep-Dives
+**Action:** Invoke all detected specialists simultaneously (if subagents available) or sequentially
 
 Example for Next.js + MongoDB + Docker project:
 ```
-Parallel:
+Specialists:
   - Skill: perseus-api (GraphQL if detected)
   - Skill: perseus-injection (NoSQL focus)
   - Skill: perseus-crypto
@@ -243,16 +260,16 @@ Parallel:
   - Skill: perseus-supply-chain
 ```
 
-**Wait Condition:** All specialist reports exist
+**Wait Condition:** All specialist reports exist in `deliverables/`
 
 **Transition:** "Specialist analysis complete. Proceeding to exploitation..."
 
 ---
 
 ### Phase 3: Exploitation & Verification
-**Action:** Invoke `Skill: perseus-exploit`
+**Action:** Invoke `Skill: perseus-exploit` (or run Phase 3 verification directly in session if single-agent)
 
-**Agents Deployed:** 14 parallel agents verifying findings based on engagement mode:
+**Verification Coverage:**
 - SQL/Command/NoSQL injection verification
 - XSS payload generation (including React/Vue specific)
 - Auth/Authz bypass testing

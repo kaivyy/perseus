@@ -1,0 +1,13 @@
+{
+  "name": "perseus",
+  "description": "Security assessment skills for Claude Code - Multi-language (JS, Go, PHP, Python, Rust, Java, Ruby, C#)",
+  "version": "2.2.2",
+  "author": {
+    "name": "Kaivy",
+    "github": "kaivyy"
+  },
+  "homepage": "https://github.com/kaivyy/perseus",
+  "repository": "https://github.com/kaivyy/perseus",
+  "license": "MIT",
+  "keywords": ["security", "pentest", "audit", "vulnerability", "skills", "multi-language"]
+}

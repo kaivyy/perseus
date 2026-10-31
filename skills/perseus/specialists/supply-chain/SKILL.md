@@ -64,6 +64,28 @@ This specialist skill performs comprehensive supply chain analysis including kno
 | Malicious Packages | Intentionally harmful packages | Backdoor |
 | Abandoned Packages | Unmaintained dependencies | Future risk |
 
+## Agent Execution Strategy (Dual-Mode)
+
+When executing this skill, adapt to the runtime environment:
+- **Mode A (Subagents Available):** Launch parallel analysts for Manifests, CVEs, Typosquatting, and Licenses.
+- **Mode B (Single-Agent Direct Execution — UNIVERSAL):** Execute audit commands sequentially in the current session using native audit CLIs if installed or parsing manifests directly, and output to `deliverables/supply_chain_analysis.md`.
+
+## Fast-Track CLI Commands for Supply Chain Auditing
+
+```bash
+# 1. Native CLI vulnerability audits (if toolchains exist)
+npm audit --json 2>/dev/null || pnpm audit --json 2>/dev/null || yarn audit --json 2>/dev/null || true
+pip-audit 2>/dev/null || true
+cargo audit 2>/dev/null || true
+govulncheck ./... 2>/dev/null || true
+
+# 2. Dangerous lifecycle scripts in manifests (preinstall / postinstall RCE)
+rg -n -C 2 "\"preinstall\"|\"postinstall\"|\"install\"" package.json 2>/dev/null || true
+
+# 3. Locate lockfiles for dependency pin verification
+ls -la package-lock.json yarn.lock pnpm-lock.yaml go.sum Cargo.lock poetry.lock Gemfile.lock 2>/dev/null || true
+```
+
 ## Execution Instructions
 
 ### Step 0: Mode & Scope Alignment

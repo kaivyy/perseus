@@ -63,6 +63,28 @@ This specialist skill performs comprehensive file security analysis including pa
 | Symlink Attacks | Following symbolic links | File access bypass |
 | SSRF via File | File:// protocol abuse | Internal network access |
 
+## Agent Execution Strategy (Dual-Mode)
+
+When executing this skill, adapt to the runtime environment:
+- **Mode A (Subagents Available):** Launch parallel analysts for Path Traversal, File Uploads, XXE, and Zip Slip.
+- **Mode B (Single-Agent Direct Execution — UNIVERSAL):** Execute each audit pass sequentially in the current session using ripgrep commands, analyze file paths, and output to `deliverables/file_security_analysis.md`.
+
+## Fast-Track CLI Commands for File Security
+
+```bash
+# 1. Path Traversal & Unsafe file system reads/writes
+rg -n -C 3 "(readFile|createReadStream|readFileSync|open\(|File\(|os\.Open|filepath\.Join|send_file|sendFile)"
+
+# 2. File Upload handlers & storage paths
+rg -n -C 3 -i "(multer|formidable|busboy|upload\.single|upload\.array|FileField|UploadFile)"
+
+# 3. Zip Slip vulnerability in archive decompression
+rg -n -C 3 -i "(unzip|extract|ZipArchive|tarfile\.open|zipfile\.ZipFile)"
+
+# 4. XML Parsing & potential XXE entities
+rg -n -C 2 -i "(xml2js|parseString|DocumentBuilderFactory|XMLReader|etree\.fromstring|sax)"
+```
+
 ## Execution Instructions
 
 ### Step 0: Mode & Scope Alignment

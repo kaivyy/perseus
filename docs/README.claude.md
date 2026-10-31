@@ -4,10 +4,11 @@ Complete guide for using Perseus with Claude Code.
 
 ## Quick Install
 
-In Claude Code, run:
+In Claude Code, add the marketplace then install the plugin:
 
-```
-/plugin install https://github.com/kaivyy/perseus
+```bash
+/plugin marketplace add kaivyy/perseus
+/plugin install perseus
 ```
 
 That's it! Everything is automatic.

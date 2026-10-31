@@ -63,6 +63,28 @@ This specialist skill analyzes business logic vulnerabilities, race conditions, 
 | AI Data Leakage | Training data exposure | Privacy breach |
 | Limit Bypass | Circumventing usage limits | Resource abuse |
 
+## Agent Execution Strategy (Dual-Mode)
+
+When executing this skill, adapt to the runtime environment:
+- **Mode A (Subagents Available):** Launch parallel analysts for Race Conditions, Payments, AI/LLM, and Workflow checks.
+- **Mode B (Single-Agent Direct Execution — UNIVERSAL):** Execute each phase sequentially in the current session using ripgrep commands, examine matching logic, and output to `deliverables/business_logic_analysis.md`.
+
+## Fast-Track CLI Commands for Business Logic & AI
+
+```bash
+# 1. AI/LLM Integration & Tool-Calling Sinks
+rg -n -C 3 -i "(openai|anthropic|langchain|llamaindex|ollama|cohere|bedrock|chat\.completions|tools\s*:|tool_choice)"
+
+# 2. Insecure Output Handling (LLM output to shell/eval/SQL/DOM)
+rg -n -C 3 -i "(exec\(.*completion|eval\(.*response|dangerouslySetInnerHTML.*completion|queryRawUnsafe.*completion)"
+
+# 3. Race Conditions & Non-Atomic Updates (Balance, Inventory, Coupons)
+rg -n -C 3 -i "(balance|inventory|credits|points|coupon|voucher|promo)\s*(\-=|\+=|=.*\+|\-)"
+
+# 4. Critical Price / Payment Manipulation (Client-trusted amounts)
+rg -n -C 3 -i "(amount|price|total|cost|fee)\s*[:=]\s*(req\.body|request\.data|c\.Bind)"
+```
+
 ## Execution Instructions
 
 ### Step 0: Mode & Scope Alignment

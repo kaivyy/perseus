@@ -62,6 +62,28 @@ This specialist skill performs comprehensive cryptographic analysis including JW
 | Random | Predictable RNG, weak seeds | Token prediction |
 | Key Management | Hardcoded keys, insecure storage | Full compromise |
 
+## Agent Execution Strategy (Dual-Mode)
+
+When executing this skill, adapt to the runtime environment:
+- **Mode A (Subagents Available):** Launch parallel analysts for JWT, Hashing, Encryption, and Secrets.
+- **Mode B (Single-Agent Direct Execution — UNIVERSAL):** Execute each audit pass sequentially in the current session using ripgrep commands, analyze code flow, and output to `deliverables/crypto_security_analysis.md`.
+
+## Fast-Track CLI Commands for Cryptography & Secrets
+
+```bash
+# 1. JWT verification without algorithm restriction or secret verification
+rg -n -C 3 -i "(jwt\.verify|jwt\.decode|algorithms\s*:|jwks)"
+
+# 2. Insecure Hashing (MD5, SHA1 for passwords) & Insecure Randomness
+rg -n -C 3 -i "(createHash\(['\"](md5|sha1)|Math\.random\(\)|rand\.Intn|random\.random)"
+
+# 3. Hardcoded API Keys, JWT Secrets, or Private Keys
+rg -n -C 2 -i "(jwt_secret|api_key|secret_key|private_key|auth_token)\s*[:=]\s*['\"][A-Za-z0-9_\-\.]{8,}['\"]"
+
+# 4. Weak Ciphers & ECB Mode
+rg -n -C 2 -i "(aes-.*-ecb|des|rc4|blowfish|crypto\.createCipher\(|Cipher\.getInstance\([\"']DES)"
+```
+
 ## Execution Instructions
 
 ### Step 0: Mode & Scope Alignment

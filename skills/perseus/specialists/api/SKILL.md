@@ -77,6 +77,28 @@ This specialist skill performs comprehensive API security analysis covering OWAS
 | Cache | Cache poisoning, cache deception, key injection, web cache DoS |
 | gRPC | Reflection enabled, missing auth, message size limits |
 
+## Agent Execution Strategy (Dual-Mode)
+
+When executing this skill, adapt to the runtime environment:
+- **Mode A (Subagents Available):** Launch parallel analysts for REST, GraphQL, WebSocket, and OAuth.
+- **Mode B (Single-Agent Direct Execution — UNIVERSAL):** Execute checks sequentially in the current session using ripgrep commands, inspect route guards, and output to `deliverables/api_security_analysis.md`.
+
+## Fast-Track CLI Commands for API Security
+
+```bash
+# 1. BOLA / IDOR candidate endpoints (Resource ID without owner check)
+rg -n -C 3 -i "(\.findById|\.findOne|\.where\(.*id)\s*\(" --glob '!tests/**'
+
+# 2. Next.js Server Actions & App Router endpoints
+rg -n -C 2 -i "('use server'|\"use server\"|export async function (POST|PUT|DELETE))"
+
+# 3. Webhook signature verification & HMAC timing checks
+rg -n -C 3 -i "(verifyWebhook|webhooks\.constructEvent|crypto\.createHmac|timingSafeEqual)"
+
+# 4. GraphQL introspection & depth limit configurations
+rg -n -C 2 -i "(introspection\s*:|validationRules|depthLimit|costAnalysis)"
+```
+
 ## Execution Instructions
 
 ### Step 0: Mode & Scope Alignment

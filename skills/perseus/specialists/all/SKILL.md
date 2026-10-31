@@ -68,21 +68,20 @@ This skill orchestrates ALL 8 specialist skills in parallel for maximum coverage
 "This provides deep-dive analysis across 8 security domains."
 ```
 
-### Step 2: Launch All Specialists in Parallel
+### Step 2: Launch All Specialists (Parallel or Sequential)
 
-Use a single message with 8 parallel `Task` tool calls:
-
-```
-Parallel Tasks:
-1. Task: "Run API security specialist" -> Skill: perseus-api
-2. Task: "Run injection specialist" -> Skill: perseus-injection
-3. Task: "Run crypto specialist" -> Skill: perseus-crypto
-4. Task: "Run supply chain specialist" -> Skill: perseus-supply-chain
-5. Task: "Run file security specialist" -> Skill: perseus-file
-6. Task: "Run business logic specialist" -> Skill: perseus-logic
-7. Task: "Run client-side specialist" -> Skill: perseus-client
-8. Task: "Run config specialist" -> Skill: perseus-config
-```
+Adapt execution to your runtime:
+- **Mode A (Subagents Available):** Launch 8 parallel tasks using a single message with subagent tool calls (`Task`, `Agent`, or `invoke_subagent`):
+  1. Task: "Run API security specialist" -> Skill: perseus-api
+  2. Task: "Run injection specialist" -> Skill: perseus-injection
+  3. Task: "Run crypto specialist" -> Skill: perseus-crypto
+  4. Task: "Run supply chain specialist" -> Skill: perseus-supply-chain
+  5. Task: "Run file security specialist" -> Skill: perseus-file
+  6. Task: "Run business logic specialist" -> Skill: perseus-logic
+  7. Task: "Run client-side specialist" -> Skill: perseus-client
+  8. Task: "Run config specialist" -> Skill: perseus-config
+- **Mode B (Single-Agent Direct Execution — UNIVERSAL):**
+  If subagents are not available, do not attempt to call non-existent tools. Systematically run the checks for each specialist sequentially in the current session and write deliverables directly.
 
 ### Step 3: Wait for Completion
 

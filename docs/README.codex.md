@@ -23,9 +23,8 @@ Fetch and follow instructions from https://raw.githubusercontent.com/kaivyy/pers
 # 1. Clone Perseus
 git clone https://github.com/kaivyy/perseus.git ~/.codex/perseus
 
-# 2. Create skills symlink
-mkdir -p ~/.agents/skills
-ln -sf ~/.codex/perseus/skills ~/.agents/skills/perseus
+# 2. Run post-install script (registers skills in ~/.agents/skills and ~/.codex/skills)
+bash ~/.codex/perseus/scripts/post-install.sh
 
 # 3. Restart Codex
 ```

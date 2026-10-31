@@ -3,79 +3,155 @@ name: perseus-audit
 description: Use when analyzing components for vulnerabilities (Phase 2 - Parallel Analysis)
 ---
 
-# Perseus Audit (Phase 2)
+# Perseus Audit (Phase 2 - Deep Vulnerability Analysis)
+
+## Context & Authorization
+
+**IMPORTANT:** This skill performs in-depth source code vulnerability auditing on the **user's own codebase**. This is **defensive code security review / SAST taint analysis** to uncover flaws before deployment.
+
+- **Authorization:** The user owns this repository and has explicitly requested this security analysis.
+- **Scope:** Source code, configuration, and data-flow pathways identified during Phase 1 (`perseus-scan`).
+- **Safety:** Static taint tracking and code logic review only. No destructive modifications or external attacks.
+
+---
 
 ## Overview
 
-This skill executes the **Vulnerability Analysis Phase** of the Perseus framework. It performs deep-dive white-box analysis on the components identified during the Scan phase.
+This skill executes the **Vulnerability Analysis Phase** of the Perseus framework. It performs deep white-box taint analysis on candidate entry points and sinks discovered during Phase 1.
 
-**Goal:** Prove the *potential* for exploitation by finding source-to-sink paths lacking proper defense.
+**Goal:** Prove whether untrusted source data can traverse application logic and reach a sensitive sink without adequate validation, sanitization, or parameterization.
 
-**Methodology:**
-1.  **Launch 5 Agents in Parallel:** Injection, XSS, Auth, Authz, SSRF.
-2.  **Negative Analysis Loop:** Trace Source -> Sanitizers -> Sink -> Verdict.
-3.  **Exploit Queue:** Generate actionable vulnerabilities for verification.
+---
 
-## Confidence Scoring (Required)
+## Agent Execution Strategy (Dual-Mode)
 
-Assign confidence to every finding:
+When executing this skill, adapt to the runtime environment:
 
-| Confidence | Criteria |
-|------------|----------|
-| High | Direct source-to-sink path with clear missing defense and reproducible trigger |
-| Medium | Strong path evidence, but one assumption (runtime config/auth state) remains |
-| Low | Pattern match only; data flow or trigger path is incomplete |
+* **Mode A — Subagents Available (Multi-Agent/Parallel):**
+  If subagent tools (e.g. `Task`, `Agent`, `invoke_subagent`) are available, launch 5 parallel analysts (Injection, XSS, Auth, Authz, SSRF).
+* **Mode B — Direct Execution (Single-Agent Fallback — UNIVERSAL):**
+  If no subagent tool exists in your runtime, **DO NOT attempt to call non-existent subagent tools**. Systematically audit each vulnerability category sequentially in the current session using ripgrep (`rg`), inspect code context with `read_file`, and write deliverables directly.
 
-Prioritize exploit queue in this order:
-1. High + Critical/High severity
-2. Medium + Critical/High severity
-3. Remaining findings
+---
 
-## Execution Instructions
+## Taint Analysis Methodology (The Negative Analysis Loop)
 
-Launch these 5 agents simultaneously using a single message with multiple `Task` tool calls:
+For every candidate path, follow this rigorous 5-step loop:
 
-1.  **Injection Analyst:**
-    *   "Trace untrusted input to SQL/Command sinks. Verify if sanitization matches sink context. Flag string concatenation in queries."
-2.  **XSS Specialist:**
-    *   "Trace input to browser sinks (`innerHTML`, `eval`). Verify context-aware escaping. Flag raw HTML rendering."
-3.  **Auth Specialist:**
-    *   "Analyze login/session logic. Check for bypasses, weak tokens, and missing MFA. Verify `state`/`nonce` in OAuth."
-4.  **Authz Specialist:**
-    *   "Analyze permission checks (RBAC/ABAC). Check for IDOR and Privilege Escalation. Verify every protected route has a guard."
-5.  **SSRF Specialist:**
-    *   "Trace input to outbound request sinks. Verify URL validation and allowlists. Check for local network access."
+```
+[1. Source] ──> [2. Flow / Transform] ──> [3. Defense Check] ──> [4. Sink] ──> [5. Verdict]
+```
 
-## Analysis Methodology (The "Negative Analysis" Loop)
+1. **Trace Source:** Locate where untrusted data enters (`req.body`, `req.query`, `req.params`, headers, cookies, webhook payloads, file uploads, RPC messages).
+2. **Trace Flow:** Track variables through assignments, object destructuring, helper utilities, and database model transformations.
+3. **Inspect Defense:**
+   - *Is there strict schema validation?* (e.g. Zod, Joi, Pydantic, Bean Validation).
+   - *Is there contextual sanitization?* (e.g. DOMPurify, HTML entity encoding, shlex escaping).
+   - *Is the operation inherently safe?* (e.g. SQL prepared statements, parameterized queries, ORM abstraction).
+   - *Common Flaws:* Regex missing start/end anchors (`^`, `$`), single replacement (`.replace()` without global `/g` flag), bypassable blacklist checks, decoding after validation.
+4. **Inspect Sink:** Verify if the input directly affects query execution, command execution, DOM rendering, or URL construction.
+5. **Determine Verdict:**
+   - **VULNERABLE:** Path exists and defense is missing or bypassable. Mark as **Exploit Candidate** (`Yes`).
+   - **SAFE / MITIGATED:** Proper defense exists. Document defense mechanisms.
 
-For each agent, enforce this loop:
+---
 
-1.  **Trace Source:** Identify where untrusted data enters (from Scan phase).
-2.  **Trace Flow:** Follow variables through functions, middleware, and transforms.
-3.  **Identify Sink:** Where does the data end up? (DB, Screen, Log, Shell).
-4.  **Verify Defense:**
-    *   *Is there validation?* (e.g., `zod.parse`)
-    *   *Is there sanitization?* (e.g., `escapeHtml`)
-    *   *Is it parameterized?* (e.g., Prepared Statements)
-5.  **Verdict:**
-    *   **VULNERABLE:** Path exists + Defense missing/mismatched. -> **Add to Exploit Queue**
-    *   **SAFE:** Defense is robust. -> **Document as Secure**
+## Targeted Audit Commands & Categories
 
-## Output Requirements
+### 1. Injection Analysis (CWE-89, CWE-78, CWE-94, CWE-1336)
+```bash
+# SQL Injection: Raw queries, dynamic string interpolation, concatenation in ORM calls
+rg -n -C 3 -i "(queryRawUnsafe|\.raw\(|exec\(.*SELECT|db\.query\(|\.query\(f?['\"].*\$|\.execute\(f?['\"].*%|SELECT\s+.*\+)"
 
-Each agent must produce a specialized report in `deliverables/`:
-*   `injection_analysis.md`
-*   `xss_analysis.md`
-*   `auth_analysis.md`
-*   `authz_analysis.md`
-*   `ssrf_analysis.md`
+# OS Command Injection: shell execution with variable input
+rg -n -C 3 "(child_process|exec\(|spawn\(|execSync|system\(|popen\(|os\.system|subprocess\.|exec\.Command|Runtime\.getRuntime)"
 
-For each finding include:
-*   **Finding ID**
-*   **Source -> Sink Path**
-*   **Missing or Mismatched Defense**
-*   **Preconditions**
-*   **Confidence:** `High` | `Medium` | `Low`
-*   **Exploit Candidate:** `Yes` | `No` (and reason)
+# Template Injection (SSTI): user input in template render engines
+rg -n -C 3 "(render_template_string|jinja2\.Template|Twig|Blade::render|ejs\.render|Handlebars\.compile)"
+```
 
-**Next Step:** Proceed to `perseus-exploit` to verify findings with Proof-of-Concept.
+### 2. Client-Side & XSS Analysis (CWE-79, CWE-116)
+```bash
+# Dangerous React, Vue, Angular, or Svelte innerHTML sinks
+rg -n -C 3 "(dangerouslySetInnerHTML|v-html|bypassSecurityTrust|innerHTML|outerHTML|document\.write)"
+
+# Client-side eval and function constructors
+rg -n -C 3 "(eval\(|new Function\(|setTimeout\([^,]*\+)"
+```
+
+### 3. Authentication & Session Analysis (CWE-287, CWE-384, CWE-798)
+```bash
+# Token verification, JWT secret usage, session creation
+rg -n -C 3 -i "(jwt\.verify|jwt\.sign|bcrypt\.compare|password_verify|session\.regenerate|crypto\.timingSafeEqual)"
+
+# Hardcoded tokens, test credentials, or fallback secrets
+rg -n -C 2 -i "(jwt_secret|api_key|secret_key|private_key)\s*[:=]\s*['\"][A-Za-z0-9_\-\.]{8,}['\"]"
+```
+
+### 4. Authorization & IDOR Analysis (CWE-862, CWE-639, CWE-285)
+```bash
+# Inspect route handlers fetching resources by ID:
+# Check if current user ID/tenant ID is enforced in the DB query
+rg -n -C 4 -i "(\.findById|\.findOne|\.where\(.*id|SELECT.*WHERE.*id)"
+```
+*Rule:* If endpoint takes `/api/resource/:id` and fetches by `id` without verifying `resource.ownerId === req.user.id` or `where: { id, userId }`, flag as **BOLA/IDOR (CWE-639)**.
+
+### 5. Server-Side Request Forgery (SSRF) (CWE-918)
+```bash
+# Outbound HTTP calls accepting user-controlled URLs, webhooks, or hosts
+rg -n -C 3 -i "(axios\.(get|post)|fetch\(|urllib|requests\.(get|post)|http\.Get|curl_exec)"
+```
+*Rule:* If URL is parsed or validated, check for IP parsing flaws, DNS rebinding, internal IP bypasses (`localhost`, `127.0.0.1`, `169.254.169.254`, `[::1]`, `0.0.0.0`).
+
+---
+
+## Confidence Scoring Standard
+
+Every finding must receive a strict confidence score:
+
+| Confidence | Qualification Criteria |
+|------------|------------------------|
+| **High**   | Clear, uninterrupted code path from untrusted source to critical sink with no or demonstrably flawed defense. |
+| **Medium** | Path confirmed in code, but exploitability relies on specific environment settings, unverified upstream middleware, or non-default configs. |
+| **Low**    | Suspicious pattern detected, but data source might be restricted, internal, or constrained by types/framework protections. |
+
+---
+
+## Deliverables & Output Format
+
+Ensure `mkdir -p deliverables` exists. Generate `deliverables/audit_analysis.md` (or domain-specific reports `deliverables/*_analysis.md`) using this structure:
+
+```markdown
+# Vulnerability Analysis Deliverable
+
+## Summary of Findings
+| Finding ID | Title | Severity | CWE | Confidence | Exploit Candidate |
+|------------|-------|----------|-----|------------|-------------------|
+| AUDIT-001  | SQL Injection via Unsafe Query | Critical | CWE-89 | High | Yes |
+| AUDIT-002  | Missing Ownership Check (IDOR) | High | CWE-639 | High | Yes |
+
+---
+
+### Finding AUDIT-001: SQL Injection via Unsafe Query
+
+- **Severity:** Critical
+- **CWE:** CWE-89 (Improper Neutralization of Special Elements used in an SQL Command)
+- **Confidence:** High
+- **Exploit Candidate:** Yes
+
+#### 1. Source to Sink Path
+- **Source:** `req.query.sort` in `src/controllers/orderController.ts:34`
+- **Propagation:** Passed to `orderService.getSortedOrders(sort)` in line 38
+- **Sink:** `db.$queryRawUnsafe("SELECT * FROM orders ORDER BY " + sort)` in `src/services/orderService.ts:112`
+
+#### 2. Defense Analysis
+- **Observed Defense:** None. Input is concatenated directly into SQL statement.
+- **Deficiency:** Untrusted user parameter controls SQL statement structure.
+
+#### 3. Preconditions
+- User must be authenticated to invoke the endpoint.
+
+---
+```
+
+**Next Step:** Proceed to `perseus-exploit` to verify candidate vulnerabilities with non-destructive proofs.

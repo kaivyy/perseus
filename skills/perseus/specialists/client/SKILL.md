@@ -64,6 +64,28 @@ This specialist skill performs deep client-side JavaScript security analysis, fo
 | DOM Clobbering | HTML overwriting JS variables | XSS, security bypass |
 | Client Storage | Sensitive data exposure | Session hijacking |
 
+## Agent Execution Strategy (Dual-Mode)
+
+When executing this skill, adapt to the runtime environment:
+- **Mode A (Subagents Available):** Launch parallel analysts for React/Vue/Angular, DOM XSS, Prototype Pollution, and SSR issues.
+- **Mode B (Single-Agent Direct Execution — UNIVERSAL):** Execute each audit pass sequentially in the current session using ripgrep commands, analyze client components, and output to `deliverables/client_side_analysis.md`.
+
+## Fast-Track CLI Commands for Client-Side Security
+
+```bash
+# 1. Dangerous innerHTML & raw template rendering in React/Vue/Angular/Svelte
+rg -n -C 2 "(dangerouslySetInnerHTML|v-html|bypassSecurityTrust|innerHTML|outerHTML|document\.write)"
+
+# 2. JavaScript protocol in links & unvalidated client redirects
+rg -n -C 2 "(href=\{.*\}|router\.push\(|window\.location)"
+
+# 3. Insecure PostMessage listeners (missing origin checks)
+rg -n -C 3 "addEventListener\(['\"]message['\"]"
+
+# 4. Client-side storage of sensitive credentials (tokens, secrets)
+rg -n -C 2 -i "(localStorage|sessionStorage)\.(setItem|getItem)\(.*(token|jwt|auth|secret|pass)"
+```
+
 ## Execution Instructions
 
 ### Step 0: Mode & Scope Alignment

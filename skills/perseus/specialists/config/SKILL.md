@@ -63,6 +63,28 @@ This specialist skill analyzes security configuration including HTTP headers, TL
 | Cloud Misconfig | Public buckets, open security groups | Data breach |
 | K8s Insecurity | No RBAC, privileged pods | Cluster compromise |
 
+## Agent Execution Strategy (Dual-Mode)
+
+When executing this skill, adapt to the runtime environment:
+- **Mode A (Subagents Available):** Launch parallel analysts for Headers, CORS, Docker, CI/CD, and Cloud.
+- **Mode B (Single-Agent Direct Execution — UNIVERSAL):** Execute each audit pass sequentially in the current session using ripgrep commands, inspect config files, and output to `deliverables/config_security_analysis.md`.
+
+## Fast-Track CLI Commands for Configuration Security
+
+```bash
+# 1. CI/CD GitHub Actions script injection & untrusted context in run:
+rg -n -C 2 "\$\{\{\s*(github\.event|inputs)\..*\}\}" .github/workflows/ 2>/dev/null || true
+
+# 2. Dockerfile root execution, privileged mode, socket mounting
+rg -n -C 2 -i "(USER\s+root|privileged\s*:|/var/run/docker\.sock)" Dockerfile docker-compose*.yml 2>/dev/null || true
+
+# 3. Permissive CORS configuration (wildcard origin with credentials)
+rg -n -C 3 -i "(origin:\s*['\"\*]|allow_origins|Access-Control-Allow-Origin|credentials:\s*true)"
+
+# 4. Active Debug modes in application configurations
+rg -n -C 2 -i "(DEBUG\s*=\s*True|debug:\s*true|\.enableDebug\(\)|app\.debug\s*=)"
+```
+
 ## Execution Instructions
 
 ### Step 0: Mode & Scope Alignment

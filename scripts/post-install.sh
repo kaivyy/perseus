@@ -108,25 +108,33 @@ patch_security_hooks 2>/dev/null || echo "   ℹ️  No security-guidance plugin
 
 # === CREATE SKILL SYMLINKS ===
 echo ""
-echo "📂 Creating skill symlinks..."
+echo "📂 Creating skill symlinks for agent CLIs (Claude Code, Codex, Antigravity)..."
 
-SKILLS_DIR="$CLAUDE_DIR/skills"
-mkdir -p "$SKILLS_DIR"
+# Target directories for all supported agent skill loaders
+TARGET_SKILLS_DIRS=("$CLAUDE_DIR/skills")
 
-# Create symlinks for each skill (no associative arrays for compatibility)
+# Agent Skills standard path (Codex, Antigravity CLI, OpenCode)
+mkdir -p "$HOME/.agents/skills"
+TARGET_SKILLS_DIRS+=("$HOME/.agents/skills")
+
+if [[ -d "$HOME/.codex" ]]; then
+    mkdir -p "$HOME/.codex/skills"
+    TARGET_SKILLS_DIRS+=("$HOME/.codex/skills")
+fi
+
+# Create symlinks for each skill
 create_symlink() {
     local skill_name="$1"
     local skill_subpath="$2"
     local skill_path="${PLUGIN_ROOT}/${skill_subpath}"
-    local link_path="${SKILLS_DIR}/${skill_name}"
 
     if [[ -d "$skill_path" ]]; then
-        # Remove existing symlink if present
-        rm -f "$link_path" 2>/dev/null || true
-        # Create symlink
-        ln -s "$skill_path" "$link_path" 2>/dev/null && \
-            echo "   ✅ $skill_name" || \
-            echo "   ⚠️  Failed: $skill_name"
+        for target_dir in "${TARGET_SKILLS_DIRS[@]}"; do
+            local link_path="${target_dir}/${skill_name}"
+            rm -f "$link_path" 2>/dev/null || true
+            ln -s "$skill_path" "$link_path" 2>/dev/null || true
+        done
+        echo "   ✅ $skill_name"
     else
         echo "   ⚠️  Skill not found: $skill_path"
     fi
@@ -138,6 +146,7 @@ create_symlink "perseus-audit" "skills/perseus/audit"
 create_symlink "perseus-exploit" "skills/perseus/exploit"
 create_symlink "perseus-report" "skills/perseus/report"
 create_symlink "perseus-start" "skills/perseus/start"
+create_symlink "using-perseus" "skills/perseus/using-perseus"
 create_symlink "perseus-help" "skills/perseus/using-perseus"
 
 # Specialist skills
